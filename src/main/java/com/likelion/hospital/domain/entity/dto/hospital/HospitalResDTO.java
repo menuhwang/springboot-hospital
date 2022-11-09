@@ -1,5 +1,6 @@
 package com.likelion.hospital.domain.entity.dto.hospital;
 
+import com.likelion.hospital.domain.entity.Hospital;
 import lombok.Getter;
 
 @Getter
@@ -11,4 +12,14 @@ public class HospitalResDTO {
     private Integer patientRoomCount;
     private Float totalAreaSize;
     private Boolean shutDown;
+
+    public HospitalResDTO(Hospital hospital) {
+        this.hospitalName = hospital.getHospitalName();
+        this.fullAddress = hospital.getFullAddress();
+        this.roadNameAddress = hospital.getRoadNameAddress();
+        this.healthcareProviderCount = hospital.getHealthcareProviderCount();
+        this.patientRoomCount = hospital.getPatientRoomCount();
+        this.totalAreaSize = hospital.getTotalAreaSize();
+        this.shutDown = hospital.isShutDown();
+    }
 }
