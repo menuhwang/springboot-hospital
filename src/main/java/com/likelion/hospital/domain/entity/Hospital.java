@@ -28,4 +28,8 @@ public class Hospital {
     private Integer patientRoomCount;
     private Integer totalNumberOfBeds;
     private Float totalAreaSize;
+
+    public boolean isShutDown() {
+        return businessStatus == 3 || businessStatusCode == 3;
+    }
 }
