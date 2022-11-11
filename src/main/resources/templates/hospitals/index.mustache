@@ -21,22 +21,34 @@
         <tbody id="hospital-table-body">
         </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" id="prev-page-btn"><a class="page-link" id="prev-link" href="#">Previous</a></li>
+            <li class="page-item" id="next-page-btn"><a class="page-link" id="next-link" href="#">Next</a></li>
+        </ul>
+    </nav>
     <script>
+        let page = {{page}};
+        let size = {{size}};
+        console.log({page, size});
         findAll();
         async function findAll() {
-            let data = await fetch("/api/v1/hospitals")
+            const data = await fetch(`/api/v1/hospitals?page=${page}&size=${size}`)
                     .then(response => {
                         if (response.ok) {
                             return response.json();
                         }
                     });
             console.log(data);
+            page = data.pageable.pageNumber;
+            size = data.size;
+            const maxPage = data.totalPages;
             for (let i = 0; i < data.content.length; i++) {
-                let hospital = data.content[i];
-                let id = hospital.id;
-                let name = hospital.hospitalName;
-                let address = hospital.fullAddress;
-                let tbody = document.getElementById("hospital-table-body");
+                const hospital = data.content[i];
+                const id = hospital.id;
+                const name = hospital.hospitalName;
+                const address = (hospital.roadNameAddress != "") ? hospital.roadNameAddress : hospital.fullAddress;
+                const tbody = document.getElementById("hospital-table-body");
                 tbody.innerHTML = tbody.innerHTML + `
                     <tr id="hospital-table-row-${id}">
                         <td id="hospital-table-row-${id}-id">${id}</td>
@@ -44,6 +56,20 @@
                         <td id="hospital-table-row-${id}-address">${address}</td>
                     </tr>
                 `;
+            }
+            const prevBtn = document.getElementById("prev-page-btn");
+            const nextBtn = document.getElementById("next-page-btn");
+            if (page < 1) {
+                prevBtn.className = "page-item disabled";
+            } else {
+                prevBtn.className = "page-item";
+                document.getElementById("prev-link").setAttribute("href", `/hospitals?page=${page - 1}&size=${size}`)
+            }
+            if (page >= maxPage - 1) {
+                nextBtn.className = "page-item disabled";
+            } else {
+                nextBtn.className = "page-item";
+                document.getElementById("next-link").setAttribute("href", `/hospitals?page=${page + 1}&size=${size}`)
             }
         }
     </script>
