@@ -1,0 +1,54 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5">
+    <h1>전국 병원 정보 전체 리스트</h1>
+    <hr>
+    <table class="table table-hover" id="hospital-table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">이름</th>
+            <th scope="col">주소</th>
+        </tr>
+        </thead>
+        <tbody id="hospital-table-body">
+        </tbody>
+    </table>
+    <script>
+        findAll();
+        async function findAll() {
+            let data = await fetch("/api/v1/hospitals")
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                    });
+            console.log(data.content);
+            for (let i = 0; i < data.content.length; i++) {
+                let hospital = data.content[i];
+                let id = hospital.id;
+                let name = hospital.hospitalName;
+                let address = hospital.fullAddress;
+                let tbody = document.getElementById("hospital-table-body");
+                tbody.innerHTML = tbody.innerHTML + `
+                    <tr id="hospital-table-row-${id}">
+                        <td id="hospital-table-row-${id}-id">${id}</td>
+                        <td id="hospital-table-row-${id}-name">${name}</td>
+                        <td id="hospital-table-row-${id}-address">${address}</td>
+                    </tr>
+                `;
+            }
+        }
+    </script>
+</div>
+{{>layouts/footer}}
+{{>bootstrap/script}}
+</body>
+</html>

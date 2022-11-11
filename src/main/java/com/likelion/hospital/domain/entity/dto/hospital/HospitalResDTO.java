@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class HospitalResDTO {
+    private Integer id;
     private String hospitalName;
     private String fullAddress;
     private String roadNameAddress;
@@ -14,6 +15,7 @@ public class HospitalResDTO {
     private Boolean shutDown;
 
     public HospitalResDTO(Hospital hospital) {
+        this.id = hospital.getId();
         this.hospitalName = hospital.getHospitalName();
         this.fullAddress = hospital.getFullAddress();
         this.roadNameAddress = hospital.getRoadNameAddress();

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/hospitals")
-public class HospitalController {
+public class HospitalApiController {
     private final HospitalService hospitalService;
 
     @GetMapping("/{id}")
@@ -21,7 +21,12 @@ public class HospitalController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<HospitalResDTO>> searchByName(@RequestParam("name") String name, @PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<HospitalResDTO>> findAll(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(hospitalService.findAll(pageable));
+    }
+
+    @GetMapping("/{name}")
+    public ResponseEntity<Page<HospitalResDTO>> searchByName(@PathVariable("name") String name, @PageableDefault Pageable pageable) {
         return ResponseEntity.ok(hospitalService.searchByName(name, pageable));
     }
 }
