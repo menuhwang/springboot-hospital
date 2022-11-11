@@ -65,13 +65,13 @@
                 prevBtn.className = "page-item disabled";
             } else {
                 prevBtn.className = "page-item";
-                document.getElementById("prev-link").setAttribute("href", `/hospitals?page=${page - 1}&size=${size}`)
+                document.getElementById("prev-link").setAttribute("href", (city === "") ? `/hospitals?page=${page - 1}&size=${size}` : `/hospitals?city=${city}&page=${page - 1}&size=${size}`)
             }
             if (page >= maxPage - 1) {
                 nextBtn.className = "page-item disabled";
             } else {
                 nextBtn.className = "page-item";
-                document.getElementById("next-link").setAttribute("href", `/hospitals?page=${page + 1}&size=${size}`)
+                document.getElementById("next-link").setAttribute("href", (city === "") ? `/hospitals?page=${page + 1}&size=${size}` : `/hospitals?city=${city}&page=${page + 1}&size=${size}`)
             }
         }
     </script>
