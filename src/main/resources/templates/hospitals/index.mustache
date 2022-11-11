@@ -28,12 +28,14 @@
         </ul>
     </nav>
     <script>
+        let city = "{{city}}";
         let page = {{page}};
         let size = {{size}};
         console.log({page, size});
         findAll();
         async function findAll() {
-            const data = await fetch(`/api/v1/hospitals?page=${page}&size=${size}`)
+            const url = (city === "") ? `/api/v1/hospitals?page=${page}&size=${size}` : `/api/v1/hospitals?city=${city}&page=${page}&size=${size}`;
+            const data = await fetch(url)
                     .then(response => {
                         if (response.ok) {
                             return response.json();
@@ -47,7 +49,7 @@
                 const hospital = data.content[i];
                 const id = hospital.id;
                 const name = hospital.hospitalName;
-                const address = (hospital.roadNameAddress != "") ? hospital.roadNameAddress : hospital.fullAddress;
+                const address = (hospital.roadNameAddress !== "") ? hospital.roadNameAddress : hospital.fullAddress;
                 const tbody = document.getElementById("hospital-table-body");
                 tbody.innerHTML = tbody.innerHTML + `
                     <tr id="hospital-table-row-${id}">

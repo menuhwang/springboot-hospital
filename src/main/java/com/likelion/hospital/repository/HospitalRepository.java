@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
     Page<Hospital> findByHospitalNameContains(String name, Pageable pageable);
+    Page<Hospital> findByFullAddressContainsOrFullAddressContains(String city1, String city2, Pageable pageable);
 }
