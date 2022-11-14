@@ -1,0 +1,44 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5">
+    <h1 id="board-post-title">제목</h1>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h5 id="board-post-author">작성자</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text" id="board-post-content">내용</p>
+            <a class="float-start" href="/boards">back</a>
+            <a type="button" class="btn btn-primary float-end ms-2">삭제</a>
+            <a type="button" class="btn btn-primary float-end ms-2">수정</a>
+        </div>
+    </div>
+</div>
+{{>layouts/footer}}
+<script>
+    getOne();
+    async function getOne() {
+        const title = document.getElementById("board-post-title");
+        const author = document.getElementById("board-post-author");
+        const content = document.getElementById("board-post-content");
+        const data = await fetch(`/api/v1/boards/{{id}}`).then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+        });
+        title.innerText = data.title;
+        author.innerText = data.author;
+        content.innerText = data.content;
+    }
+</script>
+{{>bootstrap/script}}
+</body>
+</html>

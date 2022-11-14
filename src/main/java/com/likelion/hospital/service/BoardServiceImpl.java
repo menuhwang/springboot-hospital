@@ -23,4 +23,10 @@ public class BoardServiceImpl implements BoardService {
         Page<Board> page = boardRepository.findAll(pageable);
         return page.map(BoardDTO::from);
     }
+
+    @Override
+    public BoardDTO getOneById(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
+        return BoardDTO.from(board);
+    }
 }

@@ -30,4 +30,10 @@ public class BoardApiController {
         log.info("전체 리스트 요청 page:{}, pageSize:{}", pageable.getPageNumber(), pageable.getPageSize());
         return ResponseEntity.ok(boardService.getAll(pageable));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardDTO> getOneById(@PathVariable("id") Long id) {
+        log.info("게시글 조회 id:{}", id);
+        return ResponseEntity.ok(boardService.getOneById(id));
+    }
 }
