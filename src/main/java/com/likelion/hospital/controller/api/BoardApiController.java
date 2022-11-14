@@ -1,8 +1,6 @@
 package com.likelion.hospital.controller.api;
 
 import com.likelion.hospital.domain.dto.board.BoardDTO;
-import com.likelion.hospital.domain.entity.Board;
-import com.likelion.hospital.repository.BoardRepository;
 import com.likelion.hospital.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
