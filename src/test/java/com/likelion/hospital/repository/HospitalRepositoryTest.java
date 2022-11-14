@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class HospitalRepositoryTest {
     @Autowired
@@ -18,9 +16,19 @@ class HospitalRepositoryTest {
 
     @Test
     void findByBusinessTypeNameIn() {
-        List<String> query = new ArrayList<>(Arrays.asList("보건진료소", "보건지소", "보건소"));
-        List<Hospital> hospitals = hospitalRepository.findByBusinessTypeNameIn(query);
+        List<String> types = new ArrayList<>(Arrays.asList("보건진료소", "보건지소", "보건소"));
+        List<Hospital> hospitals = hospitalRepository.findByBusinessTypeNameIn(types);
         for(Hospital hospital: hospitals) {
+            System.out.println(hospital.getHospitalName());
+        }
+    }
+
+    @Test
+    void findByAddressContainsAndBusinessTypNameIn() {
+        List<String> types = new ArrayList<>(Arrays.asList("보건진료소", "보건지소", "보건소"));
+        String address = "인천광역시";
+        List<Hospital> hospitals = hospitalRepository.findByFullAddressContainsAndBusinessTypeNameIn(address, types);
+        for (Hospital hospital : hospitals) {
             System.out.println(hospital.getHospitalName());
         }
     }

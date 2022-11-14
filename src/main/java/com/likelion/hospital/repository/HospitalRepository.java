@@ -18,7 +18,8 @@ public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
     SELECT * FROM nation_wide_hospitals WHERE (full_address LIKE '인천광역시%' OR road_name_address LIKE '인천광역시%')
            AND business_type_name LIKE '%보건%';
     */
-    List<Hospital> findByBusinessTypeNameIn(List<String> query);
+    List<Hospital> findByFullAddressContainsAndBusinessTypeNameIn(String address, List<String> types);
+    List<Hospital> findByBusinessTypeNameIn(List<String> types);
     Page<Hospital> findByHospitalNameContains(String name, Pageable pageable);
     Page<Hospital> findByFullAddressContainsOrFullAddressContains(String city1, String city2, Pageable pageable);
 }
