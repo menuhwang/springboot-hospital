@@ -1,6 +1,6 @@
 package com.likelion.hospital.service;
 
-import com.likelion.hospital.domain.entity.dto.hospital.HospitalResDTO;
+import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

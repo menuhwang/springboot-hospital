@@ -1,6 +1,6 @@
 package com.likelion.hospital.controller.api;
 
-import com.likelion.hospital.domain.entity.dto.hospital.HospitalResDTO;
+import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
 import com.likelion.hospital.service.HospitalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

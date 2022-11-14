@@ -1,7 +1,7 @@
 package com.likelion.hospital.service;
 
 import com.likelion.hospital.domain.entity.Hospital;
-import com.likelion.hospital.domain.entity.dto.hospital.HospitalResDTO;
+import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
 import com.likelion.hospital.repository.HospitalRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

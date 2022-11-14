@@ -1,4 +1,4 @@
-package com.likelion.hospital.domain.entity.dto.hospital;
+package com.likelion.hospital.domain.dto.hospital;
 
 import com.likelion.hospital.domain.entity.Hospital;
 import lombok.Getter;
