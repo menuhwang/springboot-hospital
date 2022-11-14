@@ -20,6 +20,12 @@ public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
     */
     List<Hospital> findByFullAddressContainsAndBusinessTypeNameIn(String address, List<String> types);
     List<Hospital> findByBusinessTypeNameIn(List<String> types);
+
+    /*
+    병상 수가 10개 이상 20개 이하인 병원
+    SELECT * FROM nation_wide_hospitals WHERE total_number_of_beds BETWEEN 10 AND 20;
+    */
+    List<Hospital> findByTotalNumberOfBedsBetween(Integer n1, Integer n2);
     Page<Hospital> findByHospitalNameContains(String name, Pageable pageable);
     Page<Hospital> findByFullAddressContainsOrFullAddressContains(String city1, String city2, Pageable pageable);
 }

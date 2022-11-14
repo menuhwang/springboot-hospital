@@ -32,4 +32,12 @@ class HospitalRepositoryTest {
             System.out.println(hospital.getHospitalName());
         }
     }
+
+    @Test
+    void findByTotalNumberOfBedsBetween() {
+        List<Hospital> hospitals = hospitalRepository.findByTotalNumberOfBedsBetween(10, 20);
+        for (Hospital hospital : hospitals) {
+            System.out.println(hospital.getHospitalName());
+        }
+    }
 }
