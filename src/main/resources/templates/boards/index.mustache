@@ -1,0 +1,63 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5">
+    <h1>게시판</h1>
+    <hr>
+    <table class="table table-hover" id="board-table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">작성자</th>
+            <th scope="col">제목</th>
+        </tr>
+        </thead>
+        <tbody id="board-table-body">
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" id="prev-page-btn"><a class="page-link" id="prev-link" href="#">Previous</a></li>
+            <li class="page-item" id="next-page-btn"><a class="page-link" id="next-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+    <a class="btn btn-primary" href="/boards/new">글쓰기</a>
+    <script>
+        findAll();
+        async function findAll() {
+            const tbody = document.getElementById("board-table-body");
+            const data = await fetch(`/api/v1/boards`)
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                    });
+            console.log(data);
+            const contents = data.content;
+            if (contents.length > 0) {
+                for (let i = 0; i < contents.length; i++) {
+                    const id = contents[i].id;
+                    const author = contents[i].author;
+                    const title = contents[i].title;
+                    tbody.innerHTML = tbody.innerHTML + `
+                        <tr onclick="location.href='/boards/${id}'">
+                            <td>${id}</td>
+                            <td>${author}</td>
+                            <td>${title}</td>
+                        </tr>
+                    `;
+                }
+            }
+        }
+    </script>
+</div>
+{{>layouts/footer}}
+{{>bootstrap/script}}
+</body>
+</html>
