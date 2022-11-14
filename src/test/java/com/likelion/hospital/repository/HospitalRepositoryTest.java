@@ -34,8 +34,8 @@ class HospitalRepositoryTest {
     }
 
     @Test
-    void findByTotalNumberOfBedsBetween() {
-        List<Hospital> hospitals = hospitalRepository.findByTotalNumberOfBedsBetween(10, 20);
+    void findByPatientRoomCountBetween() {
+        List<Hospital> hospitals = hospitalRepository.findByPatientRoomCountBetween(10, 19);
         for (Hospital hospital : hospitals) {
             System.out.println(hospital.getHospitalName());
         }
