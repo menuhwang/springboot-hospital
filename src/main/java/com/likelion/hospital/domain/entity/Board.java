@@ -1,12 +1,16 @@
 package com.likelion.hospital.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Board {
     @Id
@@ -18,11 +22,4 @@ public class Board {
     private String title;
     @Column(nullable = false)
     private String content;
-
-    public Board(Long id, String author, String title, String content) {
-        this.id = id;
-        this.author = author;
-        this.title = title;
-        this.content = content;
-    }
 }

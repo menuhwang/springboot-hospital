@@ -1,6 +1,7 @@
 package com.likelion.hospital.controller.api;
 
-import com.likelion.hospital.domain.dto.board.BoardDTO;
+import com.likelion.hospital.domain.dto.board.BoardResDTO;
+import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,11 +42,11 @@ class BoardApiControllerTest {
                 .build();
     }
 
-    BoardDTO boardDTO = new BoardDTO(1L, "author", "title", "content");
+    BoardResDTO boardResDTO = new BoardResDTO(1L, "author", "title", "content");
 
     @Test
     void create() throws Exception {
-        given(boardService.create(any(BoardDTO.class))).willReturn(boardDTO);
+        given(boardService.create(any(BoardReqDTO.class))).willReturn(boardResDTO);
         mockMvc.perform(post("/api/v1/boards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{" +
@@ -61,7 +61,7 @@ class BoardApiControllerTest {
 
     @Test
     void getOneById() throws Exception {
-        given(boardService.getOneById(1L)).willReturn(boardDTO);
+        given(boardService.getOneById(1L)).willReturn(boardResDTO);
         mockMvc.perform(get("/api/v1/boards/1"))
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.author").value("author"))

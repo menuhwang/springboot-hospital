@@ -1,6 +1,7 @@
 package com.likelion.hospital.controller.api;
 
-import com.likelion.hospital.domain.dto.board.BoardDTO;
+import com.likelion.hospital.domain.dto.board.BoardResDTO;
+import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +19,19 @@ public class BoardApiController {
     private final BoardService boardService;
 
     @PostMapping("")
-    public ResponseEntity<BoardDTO> create(@RequestBody BoardDTO boardDTO) {
-        log.info("author:{}, title:{}", boardDTO.getAuthor(), boardDTO.getTitle());
-        return ResponseEntity.ok(boardService.create(boardDTO));
+    public ResponseEntity<BoardResDTO> create(@RequestBody BoardReqDTO boardReqDTO) {
+        log.info("author:{}, title:{}", boardReqDTO.getAuthor(), boardReqDTO.getTitle());
+        return ResponseEntity.ok(boardService.create(boardReqDTO));
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<BoardDTO>> getAll(@PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<BoardResDTO>> getAll(@PageableDefault Pageable pageable) {
         log.info("전체 리스트 요청 page:{}, pageSize:{}", pageable.getPageNumber(), pageable.getPageSize());
         return ResponseEntity.ok(boardService.getAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardDTO> getOneById(@PathVariable("id") Long id) {
+    public ResponseEntity<BoardResDTO> getOneById(@PathVariable("id") Long id) {
         log.info("게시글 조회 id:{}", id);
         return ResponseEntity.ok(boardService.getOneById(id));
     }
