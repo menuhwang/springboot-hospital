@@ -17,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,17 +50,20 @@ class BoardApiControllerTest {
 
     @Test
     void create() throws Exception {
+        BoardReqDTO editDTO = BoardReqDTO.builder()
+                .author("author")
+                .title("title")
+                .content("content")
+                .build();
         given(boardService.create(any(BoardReqDTO.class))).willReturn(boardResDTO);
         mockMvc.perform(post("/api/v1/boards")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                        "\"author\" :  \"author\"," +
-                        "\"title\" :  \"title\"," +
-                        "\"content\" :  \"content\"" +
-                        "}"))
+                .characterEncoding("utf-8") //objectMapper 사용시 RequestBody가 <no character encoding set> 이라고 뜨는 문제가 발생. 따라서 인코딩 설정.
+                .content(objectMapper.writeValueAsString(editDTO)))
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.title").value("title"))
                 .andExpect(jsonPath("$.content").value("content"));
+        verify(boardService).create(any(BoardReqDTO.class));
     }
 
     @Test
@@ -70,6 +74,7 @@ class BoardApiControllerTest {
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.title").value("title"))
                 .andExpect(jsonPath("$.content").value("content"));
+        verify(boardService).getOneById(1L);
     }
 
     @Test
@@ -87,10 +92,12 @@ class BoardApiControllerTest {
                 .build();
 
         given(boardService.editOneById(eq(1L), any(BoardReqDTO.class))).willReturn(mockDTO);
-        // 인자에 any와 raw 값을 같이 넣을 수 없다.
+        // 인자에 any와 raw 값을 같이 넣을 수 없다.()
 
         mockMvc.perform(patch("/api/v1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(editDTO)));
+        verify(boardService).editOneById(eq(1L), any(BoardReqDTO.class));
     }
 }
