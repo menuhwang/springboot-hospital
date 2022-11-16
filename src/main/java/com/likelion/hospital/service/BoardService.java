@@ -9,4 +9,5 @@ public interface BoardService {
     BoardResDTO create(BoardReqDTO boardReqDTO);
     Page<BoardResDTO> getAll(Pageable pageable);
     BoardResDTO getOneById(Long id);
+    BoardResDTO editOneById(Long id, BoardReqDTO boardReqDTO);
 }

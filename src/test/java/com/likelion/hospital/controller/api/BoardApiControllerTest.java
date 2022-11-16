@@ -1,5 +1,6 @@
 package com.likelion.hospital.controller.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.service.BoardService;
@@ -14,9 +15,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,6 +30,8 @@ class BoardApiControllerTest {
     private WebApplicationContext webApplicationContext;
     @MockBean
     private BoardService boardService;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void setup() {
@@ -67,5 +70,27 @@ class BoardApiControllerTest {
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.title").value("title"))
                 .andExpect(jsonPath("$.content").value("content"));
+    }
+
+    @Test
+    void editOneById() throws Exception {
+        BoardReqDTO editDTO = BoardReqDTO.builder()
+                .author("edit-author")
+                .title("edit-title")
+                .content("edit-content")
+                .build();
+        BoardResDTO mockDTO = BoardResDTO.builder()
+                .id(1L)
+                .author("edit-author")
+                .title("edit-title")
+                .content("edit-content")
+                .build();
+
+        given(boardService.editOneById(eq(1L), any(BoardReqDTO.class))).willReturn(mockDTO);
+        // 인자에 any와 raw 값을 같이 넣을 수 없다.
+
+        mockMvc.perform(patch("/api/v1/boards/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(editDTO)));
     }
 }

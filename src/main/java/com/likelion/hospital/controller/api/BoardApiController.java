@@ -35,4 +35,10 @@ public class BoardApiController {
         log.info("게시글 조회 id:{}", id);
         return ResponseEntity.ok(boardService.getOneById(id));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<BoardResDTO> editOneById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO) {
+        log.info("게시글 수정 id:{}, body:{}", id, boardReqDTO);
+        return ResponseEntity.ok(boardService.editOneById(id, boardReqDTO));
+    }
 }

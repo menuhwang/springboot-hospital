@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +29,16 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardResDTO getOneById(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
+        return BoardResDTO.from(board);
+    }
+
+    @Override
+    @Transactional // 더티 체킹
+    public BoardResDTO editOneById(Long id, BoardReqDTO boardReqDTO) {
+        Board board= boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
+        board.updateAuthor(boardReqDTO.getAuthor());
+        board.updateTitle(boardReqDTO.getTitle());
+        board.updateContent(boardReqDTO.getContent());
         return BoardResDTO.from(board);
     }
 }

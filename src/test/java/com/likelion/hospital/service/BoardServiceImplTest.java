@@ -43,6 +43,21 @@ class BoardServiceImplTest {
         assertBoardDTO(boardReqDTO, result);
     }
 
+    @Test
+    void editById() {
+        given(boardRepository.findById(1L)).willReturn(Optional.of(boardReqDTO.toEntity()));
+
+        BoardReqDTO editDTO = BoardReqDTO.builder()
+                                            .author("edit-author")
+                                            .title("edit-title")
+                                            .content("edit-content")
+                                            .build();
+
+        BoardResDTO result = boardService.editOneById(1L, editDTO);
+
+        assertBoardDTO(editDTO, result);
+    }
+
     void assertBoardDTO(BoardReqDTO expected, BoardResDTO actual) {
         assertEquals(expected.getAuthor(), actual.getAuthor());
         assertEquals(expected.getTitle(), actual.getTitle());

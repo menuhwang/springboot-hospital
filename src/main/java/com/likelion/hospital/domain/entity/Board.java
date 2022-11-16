@@ -22,4 +22,16 @@ public class Board {
     private String title;
     @Column(nullable = false)
     private String content;
+
+    public void updateAuthor(String author) {
+        if (author != null) this.author = author;
+    }
+
+    public void updateTitle(String title) {
+        if (title != null) this.title = title;
+    }
+
+    public void updateContent(String content) {
+        if (content != null) this.content = content;
+    }
 }
