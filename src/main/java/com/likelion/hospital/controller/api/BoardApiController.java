@@ -31,14 +31,21 @@ public class BoardApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardResDTO> getOneById(@PathVariable("id") Long id) {
+    public ResponseEntity<BoardResDTO> getById(@PathVariable("id") Long id) {
         log.info("게시글 조회 id:{}", id);
-        return ResponseEntity.ok(boardService.getOneById(id));
+        return ResponseEntity.ok(boardService.getById(id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BoardResDTO> editOneById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO) {
+    public ResponseEntity<BoardResDTO> editById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO) {
         log.info("게시글 수정 id:{}, body:{}", id, boardReqDTO);
-        return ResponseEntity.ok(boardService.editOneById(id, boardReqDTO));
+        return ResponseEntity.ok(boardService.editById(id, boardReqDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+        log.info("게시글 삭제 id:{}", id);
+        boardService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

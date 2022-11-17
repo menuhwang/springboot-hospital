@@ -44,7 +44,7 @@ class BoardServiceImplTest {
     void getOneById() {
         given(boardRepository.findById(1L)).willReturn(Optional.of(boardReqDTO.toEntity()));
 
-        BoardResDTO result = boardService.getOneById(1L);
+        BoardResDTO result = boardService.getById(1L);
 
         assertBoardDTO(boardReqDTO, result);
     }
@@ -78,7 +78,7 @@ class BoardServiceImplTest {
                                             .content("edit-content")
                                             .build();
 
-        BoardResDTO result = boardService.editOneById(1L, editDTO);
+        BoardResDTO result = boardService.editById(1L, editDTO);
 
         assertBoardDTO(editDTO, result);
     }

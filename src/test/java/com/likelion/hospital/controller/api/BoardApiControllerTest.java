@@ -68,13 +68,13 @@ class BoardApiControllerTest {
 
     @Test
     void getOneById() throws Exception {
-        given(boardService.getOneById(1L)).willReturn(boardResDTO);
+        given(boardService.getById(1L)).willReturn(boardResDTO);
         mockMvc.perform(get("/api/v1/boards/1"))
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.title").value("title"))
                 .andExpect(jsonPath("$.content").value("content"));
-        verify(boardService).getOneById(1L);
+        verify(boardService).getById(1L);
     }
 
     @Test
@@ -91,13 +91,13 @@ class BoardApiControllerTest {
                 .content("edit-content")
                 .build();
 
-        given(boardService.editOneById(eq(1L), any(BoardReqDTO.class))).willReturn(mockDTO);
+        given(boardService.editById(eq(1L), any(BoardReqDTO.class))).willReturn(mockDTO);
         // 인자에 any와 raw 값을 같이 넣을 수 없다.()
 
         mockMvc.perform(patch("/api/v1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(editDTO)));
-        verify(boardService).editOneById(eq(1L), any(BoardReqDTO.class));
+        verify(boardService).editById(eq(1L), any(BoardReqDTO.class));
     }
 }

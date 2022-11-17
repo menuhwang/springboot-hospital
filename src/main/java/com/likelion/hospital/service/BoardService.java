@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 public interface BoardService {
     BoardResDTO create(BoardReqDTO boardReqDTO);
     Page<BoardResDTO> getAll(Pageable pageable);
-    BoardResDTO getOneById(Long id);
-    BoardResDTO editOneById(Long id, BoardReqDTO boardReqDTO);
+    BoardResDTO getById(Long id);
+    BoardResDTO editById(Long id, BoardReqDTO boardReqDTO);
+    void deleteById(Long id);
 }

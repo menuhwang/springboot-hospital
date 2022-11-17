@@ -17,19 +17,19 @@
         <div class="card-body">
             <p class="card-text" id="board-post-content">내용</p>
             <a class="float-start" href="/boards">back</a>
-            <a type="button" class="btn btn-primary float-end ms-2">삭제</a>
+            <button type="button" class="btn btn-primary float-end ms-2" onclick="deleteById({{id}})">삭제</button>
             <a type="button" class="btn btn-primary float-end ms-2" href="/boards/edit/{{id}}">수정</a>
         </div>
     </div>
 </div>
 {{>layouts/footer}}
 <script>
-    getOne();
-    async function getOne() {
+    getOne({{id}});
+    async function getOne(id) {
         const title = document.getElementById("board-post-title");
         const author = document.getElementById("board-post-author");
         const content = document.getElementById("board-post-content");
-        const data = await fetch(`/api/v1/boards/{{id}}`).then(res => {
+        const data = await fetch(`/api/v1/boards/${id}`).then(res => {
             if (res.ok) {
                 return res.json();
             }
@@ -37,6 +37,13 @@
         title.innerText = data.title;
         author.innerText = data.author;
         content.innerText = data.content;
+    }
+
+    async function deleteById(id) {
+        const response = await fetch(`/api/v1/boards/${id}`, {
+            method:'DELETE'
+        });
+        if (response.ok) location.href = '/boards'
     }
 </script>
 {{>bootstrap/script}}

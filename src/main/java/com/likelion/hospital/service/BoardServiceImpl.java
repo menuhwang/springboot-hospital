@@ -27,18 +27,23 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardResDTO getOneById(Long id) {
+    public BoardResDTO getById(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
         return BoardResDTO.from(board);
     }
 
     @Override
     @Transactional // 더티 체킹
-    public BoardResDTO editOneById(Long id, BoardReqDTO boardReqDTO) {
+    public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO) {
         Board board= boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
         board.updateAuthor(boardReqDTO.getAuthor());
         board.updateTitle(boardReqDTO.getTitle());
         board.updateContent(boardReqDTO.getContent());
         return BoardResDTO.from(board);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        boardRepository.deleteById(id);
     }
 }
