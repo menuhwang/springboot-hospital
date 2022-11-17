@@ -55,6 +55,15 @@ class ReplyServiceImplTest {
         assertReply(replyReqDTO, replyResDTO);
     }
 
+    @Test
+    void createWhenNoBoard() {
+        // given
+        given(boardRepository.findById(any())).willThrow(new RuntimeException("해당 게시물이 없습니다."));
+
+        // when then
+        assertThrows(RuntimeException.class, () -> replyService.create(any()));
+    }
+
     private void assertReply(ReplyReqDTO expected, ReplyResDTO actual) {
         assertNotNull(actual.getId());
         assertEquals(expected.getAuthor(), actual.getAuthor());
