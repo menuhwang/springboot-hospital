@@ -19,6 +19,12 @@ public class BoardController {
         return "boards/new";
     }
 
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable("id") String id) {
+        model.addAttribute("id", id);
+        return "boards/edit";
+    }
+
     @GetMapping("/{id}")
     public String getPost(Model model, @PathVariable("id") Long id) {
         model.addAttribute("id", id);

@@ -1,0 +1,67 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5">
+    <h1>게시글 수정</h1>
+    <hr>
+    <div class="mb-3">
+        <label class="form-label">작성자</label>
+        <!--- name 속성안에 Dto의 필드명을 써주면 된다 -->
+        <input type="text" class="form-control" id="board-post-author" name="author">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">제목</label>
+        <!--- name 속성안에 Dto의 필드명을 써주면 된다 -->
+        <input type="text" class="form-control" id="board-post-title" name="title">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">내용</label>
+        <!--- name 속성안에 Dto의 필드명을 써주면 된다 -->
+        <textarea class="form-control" rows="3" id="board-post-content" name="content"></textarea>
+    </div>
+    <button class="btn btn-primary" onclick="patch({{id}})">수정</button>
+    <!--- 리다이렉트 전체 조회페이지로 이동 기능 a태그로 --->
+    <a href="/boards">back</a>
+</div>
+{{>layouts/footer}}
+<script>
+    get({{id}});
+    async function patch(id) {
+        const title = document.getElementById("board-post-title").value;
+        const author = document.getElementById("board-post-author").value;
+        const content = document.getElementById("board-post-content").value;
+        const data = {title, author, content};
+        console.log(data);
+        const response = await fetch(`/api/v1/boards/${id}`, {
+            method : "PATCH",
+            headers : {'Content-Type' : 'application/json'},
+            body : JSON.stringify({title, author, content})
+        })
+        if (response.ok) location.href = `/boards/${id}`;
+    }
+    async function get(id) {
+        let title = document.getElementById("board-post-title");
+        let author = document.getElementById("board-post-author");
+        let content = document.getElementById("board-post-content");
+
+        const response = await fetch(`/api/v1/boards/${id}`)
+        if (response.ok) {
+            const data = await response.json();
+            title.value = data.title;
+            author.value = data.author;
+            content.value = data.content;
+        } else {
+            // console.log(response);
+            location.href = `/boards/${id}`;
+        }
+    }
+</script>
+{{>bootstrap/script}}
+</body>
+</html>
