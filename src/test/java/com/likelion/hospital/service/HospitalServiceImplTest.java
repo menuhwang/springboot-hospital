@@ -5,11 +5,19 @@ import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
 import com.likelion.hospital.repository.HospitalRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 class HospitalServiceImplTest {
     private final HospitalRepository hospitalRepository = Mockito.mock(HospitalRepository.class);
@@ -42,12 +50,60 @@ class HospitalServiceImplTest {
 
         // then
         Mockito.verify(hospitalRepository).findById(1);
-        assertEquals(hospital.getHospitalName(), result.getHospitalName());
-        assertEquals(hospital.getFullAddress(), result.getFullAddress());
-        assertEquals(hospital.getRoadNameAddress(), result.getRoadNameAddress());
-        assertEquals(hospital.getHealthcareProviderCount(), result.getHealthcareProviderCount());
-        assertEquals(hospital.getPatientRoomCount(), result.getPatientRoomCount());
-        assertEquals(hospital.getTotalAreaSize(), result.getTotalAreaSize());
-        assertEquals(hospital.isShutDown(), result.getShutDown());
+        assertHospital(hospital, result);
+    }
+
+    @Test
+    void findAll() {
+        //given
+        List<Hospital> hospitalList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            hospitalList.add(Hospital.builder()
+                    .id(i)
+                    .openServiceName("의원")
+                    .openLocalGovernmentCode(3620000)
+                    .managementNumber("PHMA" + i)
+                    .licenseDate(LocalDateTime.of(1999, 6, 12, 0, 0, 0))
+                    .businessStatus(1)
+                    .businessStatusCode(13)
+                    .phone("062-515-287" + i)
+                    .fullAddress("주소"+i)
+                    .roadNameAddress("도로명주소"+i)
+                    .hospitalName("의원"+i)
+                    .businessTypeName("치과의원")
+                    .healthcareProviderCount(1)
+                    .patientRoomCount(1)
+                    .totalNumberOfBeds(0)
+                    .totalAreaSize(52.29F)
+                    .build());
+        }
+        Page<Hospital> page = new PageImpl<>(hospitalList);
+
+        given(hospitalRepository.findAll(any(Pageable.class))).willReturn(page);
+
+        Page<HospitalResDTO> result = hospitalService.findAll(PageRequest.of(0, 10));
+
+        assertPage(page, result);
+    }
+
+    private void assertPage(Page<Hospital> expected, Page<HospitalResDTO> actual) {
+        assertEquals(expected.getTotalPages(), expected.getTotalPages());
+        assertEquals(expected.getNumber(), actual.getNumber());
+        assertEquals(expected.getSize(), actual.getSize());
+        List<Hospital> hospitalList = expected.getContent();
+        List<HospitalResDTO> hospitalResDTOList = actual.getContent();
+        for (int i = 0; i < expected.getSize(); i++) {
+            assertHospital(hospitalList.get(i), hospitalResDTOList.get(i));
+        }
+    }
+
+    private void assertHospital(Hospital expected, HospitalResDTO actual) {
+        assertEquals(expected.getHospitalName(), actual.getHospitalName());
+        assertEquals(expected.getFullAddress(), actual.getFullAddress());
+        assertEquals(expected.getRoadNameAddress(), actual.getRoadNameAddress());
+        assertEquals(expected.getHealthcareProviderCount(), actual.getHealthcareProviderCount());
+        assertEquals(expected.getPatientRoomCount(), actual.getPatientRoomCount());
+        assertEquals(expected.getTotalAreaSize(), actual.getTotalAreaSize());
+        assertEquals(expected.isShutDown(), actual.getShutDown());
     }
 }
