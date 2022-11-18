@@ -27,5 +27,5 @@ public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
     */
     List<Hospital> findByPatientRoomCountBetweenOrderByPatientRoomCountDesc(Integer n1, Integer n2);
     Page<Hospital> findByHospitalNameContains(String name, Pageable pageable);
-    Page<Hospital> findByFullAddressContainsOrFullAddressContains(String city1, String city2, Pageable pageable);
+    Page<Hospital> findByFullAddressContainsOrRoadNameAddressContains(String city1, String city2, Pageable pageable);
 }

@@ -10,6 +10,11 @@
 <div class="container mt-5 mb-5">
     <h1>전국 병원 정보 전체 리스트</h1>
     <hr>
+    <form class="d-flex" action="/hospitals" method="get" role="search">
+        <input class="form-control ms-2 me-2" type="search" name="city" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    <hr>
     <table class="table table-hover" id="hospital-table">
         <thead>
         <tr>
