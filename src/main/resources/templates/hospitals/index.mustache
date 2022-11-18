@@ -11,7 +11,12 @@
     <h1>전국 병원 정보 전체 리스트</h1>
     <hr>
     <form class="d-flex" action="/hospitals" method="get" role="search">
-        <input class="form-control ms-2 me-2" type="search" name="city" placeholder="Search" aria-label="Search">
+        {{#city}}
+            <input class="form-control ms-2 me-2" type="search" name="city" value="{{city}}" placeholder="Search" aria-label="Search">
+        {{/city}}
+        {{^city}}
+            <input class="form-control ms-2 me-2" type="search" name="city" placeholder="Search" aria-label="Search">
+        {{/city}}
         <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
     <hr>
