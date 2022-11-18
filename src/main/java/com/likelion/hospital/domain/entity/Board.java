@@ -25,6 +25,7 @@ public class Board {
     @Column(nullable = false)
     private String content;
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Reply> replies = new ArrayList<>();
 
     public void addReply(Reply reply) {
