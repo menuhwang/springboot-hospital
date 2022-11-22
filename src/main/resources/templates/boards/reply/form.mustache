@@ -1,0 +1,32 @@
+<div class="card mt-5 mb-5">
+    <div class="card-header">
+        <h5>댓글 작성</h5>
+    </div>
+    <div class="card-body">
+        <input hidden name="boardId" id="reply-post-boardId" value="{{id}}">
+        <div class="mb-3">
+            <label class="form-label">작성자</label>
+            <input type="text" class="form-control" name="author" id="reply-post-author">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">내용</label>
+            <textarea class="form-control" rows="3" name="content" id="reply-post-content"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="postReply()">댓글 등록</button>
+        <script>
+            async function postReply() {
+                const boardId = document.getElementById("reply-post-boardId").value;
+                const author = document.getElementById("reply-post-author").value;
+                const content = document.getElementById("reply-post-content").value;
+                const data = {boardId, author, content};
+                console.log(data);
+                const response = await fetch(`/api/v1/replies`, {
+                    method : "POST",
+                    headers : {'Content-Type' : 'application/json'},
+                    body : JSON.stringify(data)
+                })
+                if (response.ok) location.href = "/boards/{{id}}";
+            }
+        </script>
+    </div>
+</div>

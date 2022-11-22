@@ -3,9 +3,9 @@ package com.likelion.hospital.domain.dto.reply;
 import com.likelion.hospital.domain.entity.Reply;
 import lombok.*;
 
+@ToString
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class ReplyReqDTO {
     private String author;
