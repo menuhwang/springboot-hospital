@@ -14,6 +14,11 @@ public class BoardResDTO {
     private String content;
 
     public static BoardResDTO from(Board entity) {
-        return new BoardResDTO(entity.getId(), entity.getAuthor(), entity.getTitle(), entity.getContent());
+        return BoardResDTO.builder()
+                .id(entity.getId())
+                .author(entity.getAuthor())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .build();
     }
 }
