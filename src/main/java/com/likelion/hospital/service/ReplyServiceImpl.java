@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class ReplyServiceImpl implements ReplyService {
@@ -24,5 +27,12 @@ public class ReplyServiceImpl implements ReplyService {
         reply.setBoard(board);
         Reply saved = replyRepository.save(reply);
         return ReplyResDTO.from(saved);
+    }
+
+    @Override
+    public List<ReplyResDTO> findByBoardId(Long id) {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물이 없습니다."));
+        List<Reply> replies = replyRepository.findByBoard(board);
+        return replies.stream().map(ReplyResDTO::from).collect(Collectors.toList());
     }
 }

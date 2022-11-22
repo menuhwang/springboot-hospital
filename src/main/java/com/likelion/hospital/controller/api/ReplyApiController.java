@@ -6,10 +6,9 @@ import com.likelion.hospital.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/replies")
 public class ReplyApiController {
     private final ReplyService replyService;
+
+    @GetMapping("")
+    public ResponseEntity<List<ReplyResDTO>> getRepliesByBoardId(@RequestParam("board") Long id) {
+        return ResponseEntity.ok(replyService.findByBoardId(id));
+    }
 
     @PostMapping("")
     public ResponseEntity<ReplyResDTO> create(@RequestBody ReplyReqDTO replyReqDTO) {
