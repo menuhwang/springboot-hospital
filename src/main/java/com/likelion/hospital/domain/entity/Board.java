@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Builder
@@ -24,14 +22,6 @@ public class Board {
     private String title;
     @Column(nullable = false)
     private String content;
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Reply> replies = new ArrayList<>();
-
-    public void addReply(Reply reply) {
-        reply.setBoard(this);
-        replies.add(reply);
-    }
 
     public void updateAuthor(String author) {
         if (author != null) this.author = author;

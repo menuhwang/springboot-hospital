@@ -36,7 +36,6 @@ class ReplyServiceImplTest {
                 .author("author")
                 .title("title")
                 .content("content")
-                .replies(new ArrayList<>())
                 .build();
 
         Reply saved = Reply.builder()

@@ -21,7 +21,7 @@ public class ReplyServiceImpl implements ReplyService {
     public ReplyResDTO create(ReplyReqDTO replyReqDTO) throws RuntimeException{
         Board board = boardRepository.findById(replyReqDTO.getBoardId()).orElseThrow(() -> new RuntimeException("해당 게시물이 없습니다."));
         Reply reply = replyReqDTO.toEntity();
-        board.addReply(reply);
+        reply.setBoard(board);
         Reply saved = replyRepository.save(reply);
         return ReplyResDTO.from(saved);
     }
