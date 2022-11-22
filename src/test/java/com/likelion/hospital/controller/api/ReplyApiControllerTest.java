@@ -11,8 +11,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,5 +56,25 @@ class ReplyApiControllerTest {
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.content").exists())
                 .andExpect(jsonPath("$.content").value("content"));
+    }
+
+    @Test
+    void getRepliesByBoardId() throws Exception {
+        List<ReplyResDTO> replyResDTOList = new ArrayList<>();
+        for (long i = 1; i < 5L; i++) {
+            replyResDTOList.add(ReplyResDTO.builder()
+                    .id(i)
+                    .author("author" + i)
+                    .content("content" + i)
+                    .build());
+        }
+
+        given(replyService.findByBoardId(any(Long.class))).willReturn(replyResDTOList);
+
+        mockMvc.perform(get("/api/v1/replies").param("board", "1"))
+                .andExpect(jsonPath("$[*].id").exists())
+                .andExpect(jsonPath("$[*].author").exists())
+                .andExpect(jsonPath("$[*].content").exists())
+                .andDo(print());
     }
 }
