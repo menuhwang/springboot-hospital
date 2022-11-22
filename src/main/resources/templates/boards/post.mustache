@@ -21,11 +21,14 @@
             <a type="button" class="btn btn-primary float-end ms-2" href="/boards/edit/{{id}}">수정</a>
         </div>
     </div>
+    <div class="container ms-2" id="replies-wrap">
+    </div>
     {{>boards/reply/form}}
 </div>
 {{>layouts/footer}}
 <script>
     getOne({{id}});
+    getReplies({{id}});
     async function getOne(id) {
         const title = document.getElementById("board-post-title");
         const author = document.getElementById("board-post-author");
@@ -35,9 +38,32 @@
                 return res.json();
             }
         });
+        console.log(data);
         title.innerText = data.title;
         author.innerText = data.author;
         content.innerText = data.content;
+    }
+
+    async function getReplies(id) {
+        const data = await fetch(`/api/v1/replies?board=${id}`).then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+        });
+        console.log(data);
+        const replies = document.getElementById("replies-wrap");
+        for (let i = 0; i < data.length; i++) {
+            replies.innerHTML = replies.innerHTML + `<div class="card mt-3 ms-3" id="reply-${data[i].id}">
+                <div class="card-header">
+                    <h5>${data[i].author}</h5>
+                </div>
+                <div class="card-body">
+                    ${data[i].content}
+                    <button class="btn btn-primary float-end ms-2" onclick="deleteReply(${id}, ${data[i].id})">삭제</button>
+                    <button class="btn btn-primary float-end ms-2" onclick="enableEditReply(${data[i].id})">수정</button>
+                </div>
+            </div>`
+        }
     }
 
     async function deleteById(id) {
