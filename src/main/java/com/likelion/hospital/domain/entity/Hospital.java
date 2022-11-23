@@ -7,8 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -34,6 +37,9 @@ public class Hospital {
     private Integer patientRoomCount;
     private Integer totalNumberOfBeds;
     private Float totalAreaSize;
+    @Builder.Default
+    @OneToMany(mappedBy = "hospital")
+    private List<Review> reviews = new ArrayList<>();
 
     public boolean isShutDown() {
         return businessStatus == 3 || businessStatusCode == 3;
