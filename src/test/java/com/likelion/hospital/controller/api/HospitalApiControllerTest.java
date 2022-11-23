@@ -1,6 +1,6 @@
 package com.likelion.hospital.controller.api;
 
-import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
+import com.likelion.hospital.domain.dto.hospital.HospitalResWithReviewDTO;
 import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.service.HospitalService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -59,7 +58,7 @@ class HospitalApiControllerTest {
     @Test
     void findById() throws Exception {
         Integer ID = 2321;
-        given(hospitalService.findById(ID)).willReturn(new HospitalResDTO(hospital));
+        given(hospitalService.findById(ID)).willReturn(HospitalResWithReviewDTO.of(hospital));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/hospitals/" + ID));
     }
