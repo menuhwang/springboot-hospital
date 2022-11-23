@@ -9,11 +9,11 @@ import com.likelion.hospital.repository.ReplyRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 class ReplyServiceImplTest {
@@ -44,7 +44,7 @@ class ReplyServiceImplTest {
                 .content("content")
                 .build();
 
-        given(boardRepository.findById(1L)).willReturn(Optional.ofNullable(board));
+        given(boardRepository.findById(anyLong())).willReturn(Optional.ofNullable(board));
         given(replyRepository.save(any(Reply.class))).willReturn(saved);
 
         // when
@@ -57,10 +57,17 @@ class ReplyServiceImplTest {
     @Test
     void createWhenNoBoard() {
         // given
-        given(boardRepository.findById(any())).willThrow(new RuntimeException("해당 게시물이 없습니다."));
+        ReplyReqDTO replyReqDTO = ReplyReqDTO.builder()
+                .author("author")
+                .content("content")
+                .boardId(1L)
+                .build();
+
+        given(boardRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when then
-        assertThrows(RuntimeException.class, () -> replyService.create(any()));
+        assertThrows(RuntimeException.class, () -> replyService.create(replyReqDTO));
+        // any()는 mocking 할때만 사용할 것!
     }
 
     private void assertReply(ReplyReqDTO expected, ReplyResDTO actual) {
