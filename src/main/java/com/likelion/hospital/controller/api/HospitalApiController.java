@@ -1,6 +1,7 @@
 package com.likelion.hospital.controller.api;
 
 import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
+import com.likelion.hospital.domain.dto.hospital.HospitalResWithReviewDTO;
 import com.likelion.hospital.service.HospitalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class HospitalApiController {
     private final HospitalService hospitalService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<HospitalResDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<HospitalResWithReviewDTO> findById(@PathVariable("id") Integer id) {
         log.info("병원 조회 id:{}", id);
         return ResponseEntity.ok(hospitalService.findById(id));
     }
