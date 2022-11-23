@@ -1,7 +1,8 @@
 package com.likelion.hospital.service;
 
-import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
+import com.likelion.hospital.domain.dto.hospital.HospitalResWithReviewDTO;
+import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.repository.HospitalRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -46,7 +47,7 @@ class HospitalServiceImplTest {
                 .build();
         // when
         Mockito.when(hospitalRepository.findById(1)).thenReturn(Optional.of(hospital));
-        HospitalResDTO result = hospitalService.findById(1);
+        HospitalResWithReviewDTO result = hospitalService.findById(1);
 
         // then
         Mockito.verify(hospitalRepository).findById(1);
@@ -98,6 +99,16 @@ class HospitalServiceImplTest {
     }
 
     private void assertHospital(Hospital expected, HospitalResDTO actual) {
+        assertEquals(expected.getHospitalName(), actual.getHospitalName());
+        assertEquals(expected.getFullAddress(), actual.getFullAddress());
+        assertEquals(expected.getRoadNameAddress(), actual.getRoadNameAddress());
+        assertEquals(expected.getHealthcareProviderCount(), actual.getHealthcareProviderCount());
+        assertEquals(expected.getPatientRoomCount(), actual.getPatientRoomCount());
+        assertEquals(expected.getTotalAreaSize(), actual.getTotalAreaSize());
+        assertEquals(expected.isShutDown(), actual.getShutDown());
+    }
+
+    private void assertHospital(Hospital expected, HospitalResWithReviewDTO actual) {
         assertEquals(expected.getHospitalName(), actual.getHospitalName());
         assertEquals(expected.getFullAddress(), actual.getFullAddress());
         assertEquals(expected.getRoadNameAddress(), actual.getRoadNameAddress());
