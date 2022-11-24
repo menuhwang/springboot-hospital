@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -30,5 +33,12 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResDTO findById(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 병원을 찾을 수 없습니다."));
         return ReviewResDTO.of(review);
+    }
+
+    @Override
+    public List<ReviewResDTO> findByHospital(Integer hospitalId) {
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(() -> new RuntimeException("해당 병원을 찾을 수 없습니다."));
+        List<Review> reviews = reviewRepository.findByHospital(hospital);
+        return reviews.stream().map(ReviewResDTO::of).collect(Collectors.toList());
     }
 }
