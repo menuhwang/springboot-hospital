@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
@@ -85,6 +88,28 @@ class HospitalApiControllerTest {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.author").exists())
                 .andExpect(jsonPath("$.content").exists())
+                .andDo(print());
+    }
+
+    @Test
+    void findReviewsByHospital() throws Exception {
+        Integer hospitalId = 1;
+        List<ReviewResDTO> reviewResDTOList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            reviewResDTOList.add(ReviewResDTO.builder()
+                    .id((long) i)
+                    .author("author" + i)
+                    .content("content" + i)
+                    .build());
+        }
+
+        given(reviewService.findByHospital(hospitalId)).willReturn(reviewResDTOList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/hospitals/" + hospitalId + "/reviews"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].id").exists())
+                .andExpect(jsonPath("$[*].author").exists())
+                .andExpect(jsonPath("$[*].content").exists())
                 .andDo(print());
     }
 }
