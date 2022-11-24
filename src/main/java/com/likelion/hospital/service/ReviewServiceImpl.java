@@ -25,4 +25,10 @@ public class ReviewServiceImpl implements ReviewService {
         Review saved = reviewRepository.save(review);
         return ReviewResDTO.of(saved);
     }
+
+    @Override
+    public ReviewResDTO findById(Long id) {
+        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 병원을 찾을 수 없습니다."));
+        return ReviewResDTO.of(review);
+    }
 }
