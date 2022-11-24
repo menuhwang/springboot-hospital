@@ -64,7 +64,7 @@ class HospitalApiControllerTest {
 
     @Test
     void createReview() throws Exception {
-        Integer boardId = 1;
+        Integer hospitalId = 1;
         ReviewReqDTO reviewReqDTO = ReviewReqDTO.builder()
                 .author("author")
                 .content("content")
@@ -78,7 +78,7 @@ class HospitalApiControllerTest {
 
         given(reviewService.create(anyInt(), any(ReviewReqDTO.class))).willReturn(reviewResDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hospitals/" + boardId + "/reviews")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hospitals/" + hospitalId + "/reviews")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reviewReqDTO)))
                 .andExpect(status().isOk())
