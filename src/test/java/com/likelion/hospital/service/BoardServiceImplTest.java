@@ -1,7 +1,8 @@
 package com.likelion.hospital.service;
 
-import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
+import com.likelion.hospital.domain.dto.board.BoardResDTO;
+import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.domain.entity.Board;
 import com.likelion.hospital.repository.BoardRepository;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -44,7 +45,7 @@ class BoardServiceImplTest {
     void getOneById() {
         given(boardRepository.findById(1L)).willReturn(Optional.of(boardReqDTO.toEntity()));
 
-        BoardResDTO result = boardService.getById(1L);
+        BoardResWithReplyDTO result = boardService.getById(1L);
 
         assertBoardDTO(boardReqDTO, result);
     }
@@ -95,6 +96,12 @@ class BoardServiceImplTest {
     }
 
     void assertBoardDTO(BoardReqDTO expected, BoardResDTO actual) {
+        assertEquals(expected.getAuthor(), actual.getAuthor());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getContent(), actual.getContent());
+    }
+
+    void assertBoardDTO(BoardReqDTO expected, BoardResWithReplyDTO actual) {
         assertEquals(expected.getAuthor(), actual.getAuthor());
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getContent(), actual.getContent());

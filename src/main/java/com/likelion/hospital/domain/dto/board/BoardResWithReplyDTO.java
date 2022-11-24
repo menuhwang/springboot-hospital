@@ -4,12 +4,14 @@ import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
 import com.likelion.hospital.domain.entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
+@Getter
 public class BoardResWithReplyDTO {
     private Long id;
     private String author;

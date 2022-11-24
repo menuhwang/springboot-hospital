@@ -1,8 +1,9 @@
 package com.likelion.hospital.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
+import com.likelion.hospital.domain.dto.board.BoardResDTO;
+import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,12 @@ class BoardApiControllerTest {
     }
 
     BoardResDTO boardResDTO = new BoardResDTO(1L, "author", "title", "content");
+    BoardResWithReplyDTO boardResWithReplyDTO = BoardResWithReplyDTO.builder()
+            .id(1L)
+            .author("author")
+            .title("title")
+            .content("content")
+            .build();
 
     @Test
     void create() throws Exception {
@@ -68,7 +75,7 @@ class BoardApiControllerTest {
 
     @Test
     void getOneById() throws Exception {
-        given(boardService.getById(1L)).willReturn(boardResDTO);
+        given(boardService.getById(1L)).willReturn(boardResWithReplyDTO);
         mockMvc.perform(get("/api/v1/boards/1"))
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.author").value("author"))
