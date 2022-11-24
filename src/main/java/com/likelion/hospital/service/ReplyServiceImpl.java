@@ -26,13 +26,13 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyReqDTO.toEntity();
         reply.setBoard(board);
         Reply saved = replyRepository.save(reply);
-        return ReplyResDTO.from(saved);
+        return ReplyResDTO.of(saved);
     }
 
     @Override
     public List<ReplyResDTO> findByBoardId(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물이 없습니다."));
         List<Reply> replies = replyRepository.findByBoard(board);
-        return replies.stream().map(ReplyResDTO::from).collect(Collectors.toList());
+        return replies.stream().map(ReplyResDTO::of).collect(Collectors.toList());
     }
 }

@@ -17,19 +17,19 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardResDTO create(BoardReqDTO boardDTO) {
-        return BoardResDTO.from(boardRepository.save(boardDTO.toEntity()));
+        return BoardResDTO.of(boardRepository.save(boardDTO.toEntity()));
     }
 
     @Override
     public Page<BoardResDTO> getAll(Pageable pageable) {
         Page<Board> page = boardRepository.findAll(pageable);
-        return page.map(BoardResDTO::from);
+        return page.map(BoardResDTO::of);
     }
 
     @Override
     public BoardResDTO getById(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
-        return BoardResDTO.from(board);
+        return BoardResWithReplyDTO.of(board);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BoardServiceImpl implements BoardService {
         board.updateAuthor(boardReqDTO.getAuthor());
         board.updateTitle(boardReqDTO.getTitle());
         board.updateContent(boardReqDTO.getContent());
-        return BoardResDTO.from(board);
+        return BoardResDTO.of(board);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ReplyResDTO {
     private String author;
     private String content;
 
-    public static ReplyResDTO from(Reply reply) {
+    public static ReplyResDTO of(Reply reply) {
         return ReplyResDTO.builder()
                 .id(reply.getId())
                 .author(reply.getAuthor())

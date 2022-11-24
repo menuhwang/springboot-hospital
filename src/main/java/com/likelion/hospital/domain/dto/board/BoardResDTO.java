@@ -1,7 +1,10 @@
 package com.likelion.hospital.domain.dto.board;
 
 import com.likelion.hospital.domain.entity.Board;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -13,7 +16,7 @@ public class BoardResDTO {
     private String title;
     private String content;
 
-    public static BoardResDTO from(Board entity) {
+    public static BoardResDTO of(Board entity) {
         return BoardResDTO.builder()
                 .id(entity.getId())
                 .author(entity.getAuthor())
