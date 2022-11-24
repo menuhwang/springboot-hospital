@@ -29,6 +29,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// javax.annotation.meta.When 발생으로 인한 추가
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	// swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 }
 
 tasks.named('test') {

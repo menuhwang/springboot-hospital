@@ -4,6 +4,7 @@ import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.service.BoardService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
