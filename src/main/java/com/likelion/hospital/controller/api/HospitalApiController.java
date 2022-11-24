@@ -2,7 +2,10 @@ package com.likelion.hospital.controller.api;
 
 import com.likelion.hospital.domain.dto.hospital.HospitalResDTO;
 import com.likelion.hospital.domain.dto.hospital.HospitalResWithReviewDTO;
+import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
+import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.service.HospitalService;
+import com.likelion.hospital.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/hospitals")
 public class HospitalApiController {
     private final HospitalService hospitalService;
+    private final ReviewService reviewService;
 
     @GetMapping("/{id}")
     public ResponseEntity<HospitalResWithReviewDTO> findById(@PathVariable("id") Integer id) {
@@ -30,6 +34,12 @@ public class HospitalApiController {
         log.info("병원 검색 city:{}, page:{}", city, pageable);
         Page<HospitalResDTO> page = (city == null) ? hospitalService.findAll(pageable) : hospitalService.findByCity(city, pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @PostMapping("/{id}/reviews")
+    public ResponseEntity<ReviewResDTO> createReview(@PathVariable("id") Integer id, @RequestBody ReviewReqDTO reviewReqDTO) {
+        log.info("리뷰 등록 dto:{}", reviewReqDTO);
+        return ResponseEntity.ok(reviewService.create(id, reviewReqDTO));
     }
 
 //    @GetMapping("/{name}")

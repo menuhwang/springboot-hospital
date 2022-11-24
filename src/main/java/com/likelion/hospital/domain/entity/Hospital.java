@@ -41,6 +41,11 @@ public class Hospital {
     @OneToMany(mappedBy = "hospital")
     private List<Review> reviews = new ArrayList<>();
 
+    public void addReview(Review review) {
+        review.setHospital(this);
+        this.reviews.add(review);
+    }
+
     public boolean isShutDown() {
         return businessStatus == 3 || businessStatusCode == 3;
     }

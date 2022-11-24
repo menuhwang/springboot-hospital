@@ -21,4 +21,8 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+    }
 }
