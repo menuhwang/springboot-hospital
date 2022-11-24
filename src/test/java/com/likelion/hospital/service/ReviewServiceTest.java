@@ -59,4 +59,27 @@ class ReviewServiceTest {
         assertEquals(review.getAuthor(), result.getAuthor());
         assertEquals(review.getContent(), result.getContent());
     }
+
+    @Test
+    void findById() {
+        ReviewResDTO expected = ReviewResDTO.builder()
+                .id(1L)
+                .author("author")
+                .content("content")
+                .build();
+
+        Review review = Review.builder()
+                .id(1L)
+                .author("author")
+                .content("content")
+                .build();
+
+        given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
+
+        ReviewResDTO result = reviewService.findById(1L);
+
+        assertEquals(expected.getId(), result.getId());
+        assertEquals(expected.getAuthor(), result.getAuthor());
+        assertEquals(expected.getContent(), result.getContent());
+    }
 }
