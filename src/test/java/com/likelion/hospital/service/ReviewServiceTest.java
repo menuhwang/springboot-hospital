@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -81,5 +83,39 @@ class ReviewServiceTest {
         assertEquals(expected.getId(), result.getId());
         assertEquals(expected.getAuthor(), result.getAuthor());
         assertEquals(expected.getContent(), result.getContent());
+    }
+
+    @Test
+    void findByHospital() {
+        Integer HOSPITAL_ID = 1;
+        List<ReviewResDTO> reviewResDTOList = new ArrayList<>();
+        List<Review> reviewList = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            reviewList.add(Review.builder()
+                    .id((long) i)
+                    .author("author" + i)
+                    .content("content" + i)
+                    .build());
+            reviewResDTOList.add(ReviewResDTO.builder()
+                    .id((long) i)
+                    .author("author" + i)
+                    .content("content" + i)
+                    .build());
+        }
+
+        Hospital mockHospital = new Hospital();
+
+        given(hospitalRepository.findById(HOSPITAL_ID)).willReturn(Optional.of(mockHospital));
+        given(reviewRepository.findByHospital(any(Hospital.class))).willReturn(reviewList);
+
+        List<ReviewResDTO> resultList = reviewService.findByHospital(HOSPITAL_ID);
+
+        for (int i = 0; i < resultList.size(); i++) {
+            ReviewResDTO expected = reviewResDTOList.get(i);
+            ReviewResDTO result = resultList.get(i);
+            assertEquals(expected.getId(), result.getId());
+            assertEquals(expected.getAuthor(), result.getAuthor());
+            assertEquals(expected.getContent(), result.getContent());
+        }
     }
 }
