@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -34,6 +36,12 @@ public class HospitalApiController {
         log.info("병원 검색 city:{}, page:{}", city, pageable);
         Page<HospitalResDTO> page = (city == null) ? hospitalService.findAll(pageable) : hospitalService.findByCity(city, pageable);
         return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<ReviewResDTO>> findReviewsByHospital(@PathVariable("id") Integer id) {
+        log.info("병원 리뷰만 조회 병원id:{}", id);
+        return ResponseEntity.ok(reviewService.findByHospital(id));
     }
 
     @PostMapping("/{id}/reviews")
