@@ -1,7 +1,8 @@
 package com.likelion.hospital.controller.api;
 
-import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
+import com.likelion.hospital.domain.dto.board.BoardResDTO;
+import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class BoardApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardResDTO> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<BoardResWithReplyDTO> getById(@PathVariable("id") Long id) {
         log.info("게시글 조회 id:{}", id);
         return ResponseEntity.ok(boardService.getById(id));
     }

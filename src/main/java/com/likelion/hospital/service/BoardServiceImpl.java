@@ -1,7 +1,8 @@
 package com.likelion.hospital.service;
 
-import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
+import com.likelion.hospital.domain.dto.board.BoardResDTO;
+import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.domain.entity.Board;
 import com.likelion.hospital.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardResDTO getById(Long id) {
+    public BoardResWithReplyDTO getById(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
         return BoardResWithReplyDTO.of(board);
     }
