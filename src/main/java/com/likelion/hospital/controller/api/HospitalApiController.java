@@ -6,7 +6,6 @@ import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
 import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.service.HospitalService;
 import com.likelion.hospital.service.ReviewService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -3,7 +3,6 @@ package com.likelion.hospital.controller.api;
 import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
 import com.likelion.hospital.service.ReplyService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

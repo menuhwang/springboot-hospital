@@ -6,6 +6,7 @@ import lombok.*;
 @ToString
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor // 스웨거 바인딩 이슈 때문에 추가.
 @Getter
 public class ReplyReqDTO {
     private String author;
