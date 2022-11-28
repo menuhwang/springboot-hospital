@@ -1,7 +1,9 @@
 package com.likelion.hospital.exception;
 
-public class DuplicateUsernameException extends AbstractBadRequestException {
+import org.springframework.http.HttpStatus;
+
+public class DuplicateUsernameException extends AbstractHttpResponseException {
     public DuplicateUsernameException() {
-        super("이미 존재하는 아이디입니다.");
+        super(HttpStatus.CONFLICT, "이미 존재하는 아이디입니다.");
     }
 }
