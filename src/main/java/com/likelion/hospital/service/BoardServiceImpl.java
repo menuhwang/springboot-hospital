@@ -4,6 +4,7 @@ import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.domain.entity.Board;
+import com.likelion.hospital.exception.BoardNotFoundException;
 import com.likelion.hospital.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,14 +30,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardResWithReplyDTO getById(Long id) {
-        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         return BoardResWithReplyDTO.of(board);
     }
 
     @Override
     @Transactional // 더티 체킹
     public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO) {
-        Board board= boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 게시물을 찾을 수 없습니다."));
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
         board.updateAuthor(boardReqDTO.getAuthor());
         board.updateTitle(boardReqDTO.getTitle());
         board.updateContent(boardReqDTO.getContent());

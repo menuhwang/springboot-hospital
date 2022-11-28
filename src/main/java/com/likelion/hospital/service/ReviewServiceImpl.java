@@ -4,6 +4,7 @@ import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
 import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.domain.entity.Review;
+import com.likelion.hospital.exception.HospitalNotFoundException;
 import com.likelion.hospital.repository.HospitalRepository;
 import com.likelion.hospital.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public ReviewResDTO create(Integer boardId, ReviewReqDTO dto) {
-        Hospital hospital = hospitalRepository.findById(boardId).orElseThrow(() -> new RuntimeException("해당 병원을 찾을 수 없습니다."));
+        Hospital hospital = hospitalRepository.findById(boardId).orElseThrow(HospitalNotFoundException::new);
         Review review = dto.toEntity();
         hospital.addReview(review);
         Review saved = reviewRepository.save(review);
@@ -31,13 +32,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResDTO findById(Long id) {
-        Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 병원을 찾을 수 없습니다."));
+        Review review = reviewRepository.findById(id).orElseThrow(HospitalNotFoundException::new);
         return ReviewResDTO.of(review);
     }
 
     @Override
     public List<ReviewResDTO> findByHospital(Integer hospitalId) {
-        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(() -> new RuntimeException("해당 병원을 찾을 수 없습니다."));
+        Hospital hospital = hospitalRepository.findById(hospitalId).orElseThrow(HospitalNotFoundException::new);
         List<Review> reviews = reviewRepository.findByHospital(hospital);
         return reviews.stream().map(ReviewResDTO::of).collect(Collectors.toList());
     }
