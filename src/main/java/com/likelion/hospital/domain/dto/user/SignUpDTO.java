@@ -1,9 +1,13 @@
 package com.likelion.hospital.domain.dto.user;
 
 import com.likelion.hospital.domain.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class SignUpDTO {
