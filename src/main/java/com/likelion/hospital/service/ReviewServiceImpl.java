@@ -4,7 +4,7 @@ import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
 import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.domain.entity.Review;
-import com.likelion.hospital.exception.HospitalNotFoundException;
+import com.likelion.hospital.exception.notfound.HospitalNotFoundException;
 import com.likelion.hospital.repository.HospitalRepository;
 import com.likelion.hospital.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.likelion.hospital.exception;
+package com.likelion.hospital.exception.notfound;
 
 public class BoardNotFoundException extends AbstractNotFoundException {
     public BoardNotFoundException() {

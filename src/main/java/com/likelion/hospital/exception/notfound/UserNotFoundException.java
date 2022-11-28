@@ -1,4 +1,4 @@
-package com.likelion.hospital.exception;
+package com.likelion.hospital.exception.notfound;
 
 public class UserNotFoundException extends AbstractNotFoundException {
     public UserNotFoundException() {

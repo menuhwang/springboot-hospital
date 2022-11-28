@@ -1,5 +1,6 @@
-package com.likelion.hospital.exception;
+package com.likelion.hospital.exception.notfound;
 
+import com.likelion.hospital.exception.AbstractHttpResponseException;
 import org.springframework.http.HttpStatus;
 
 public abstract class AbstractNotFoundException extends AbstractHttpResponseException {

@@ -1,4 +1,4 @@
-package com.likelion.hospital.exception;
+package com.likelion.hospital.exception.forbidden;
 
 public class SignInForbiddenException extends AbstractForbiddenException {
     public SignInForbiddenException() {

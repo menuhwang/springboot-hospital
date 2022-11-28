@@ -4,7 +4,7 @@ import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.domain.entity.Board;
-import com.likelion.hospital.exception.BoardNotFoundException;
+import com.likelion.hospital.exception.notfound.BoardNotFoundException;
 import com.likelion.hospital.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
