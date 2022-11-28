@@ -1,9 +1,12 @@
 package com.likelion.hospital.service;
 
+import com.likelion.hospital.domain.dto.user.SignInDTO;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.exception.DuplicateUsernameException;
+import com.likelion.hospital.exception.SignInForbiddenException;
+import com.likelion.hospital.exception.UserNotFoundException;
 import com.likelion.hospital.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -58,5 +61,66 @@ class UserServiceImplTest {
         given(userRepository.findByUserName("test")).willReturn(Optional.of(user));
 
         assertThrows(DuplicateUsernameException.class, () -> userService.join(signUpDTO));
+    }
+
+    @Test
+    void login_정상() {
+        String USERNAME = "test";
+        String PASSWORD = "password";
+        String EMAIL = "test@gmail.com";
+        SignInDTO signInDTO = SignInDTO.builder()
+                .userName(USERNAME)
+                .password(PASSWORD)
+                .build();
+
+        User user = User.builder()
+                .userName(USERNAME)
+                .password(PASSWORD)
+                .emailAddress(EMAIL)
+                .build();
+
+        given(userRepository.findByUserName(USERNAME)).willReturn(Optional.of(user));
+
+        UserResponse result = userService.login(signInDTO);
+
+        assertEquals(USERNAME, result.getUserName());
+        assertEquals(EMAIL, result.getEmailAddress());
+    }
+
+    @Test
+    void login_비밀번호_불일치() {
+        String USERNAME = "test";
+        String WRONG_PASSWORD = "qwer123";
+        String PASSWORD = "password";
+        String EMAIL = "test@gmail.com";
+        SignInDTO signInDTO = SignInDTO.builder()
+                .userName(USERNAME)
+                .password(WRONG_PASSWORD)
+                .build();
+
+        User user = User.builder()
+                .userName(USERNAME)
+                .password(PASSWORD)
+                .emailAddress(EMAIL)
+                .build();
+
+        given(userRepository.findByUserName(USERNAME)).willReturn(Optional.of(user));
+
+        assertThrows(SignInForbiddenException.class, () -> userService.login(signInDTO));
+    }
+
+    @Test
+    void login_유저_정보_없음() {
+        String USERNAME = "test";
+        String PASSWORD = "password";
+        String EMAIL = "test@gmail.com";
+        SignInDTO signInDTO = SignInDTO.builder()
+                .userName(USERNAME)
+                .password(PASSWORD)
+                .build();
+
+        given(userRepository.findByUserName(USERNAME)).willReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> userService.login(signInDTO));
     }
 }
