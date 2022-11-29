@@ -1,6 +1,7 @@
 package com.likelion.hospital.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.user.SignInDTO;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
@@ -9,6 +10,7 @@ import com.likelion.hospital.exception.forbidden.SignInForbiddenException;
 import com.likelion.hospital.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SignApiController.class)
+@ImportAutoConfiguration(SecurityConfig.class)
 class SignApiControllerTest {
     @Autowired
     private MockMvc mockMvc;

@@ -1,6 +1,7 @@
 package com.likelion.hospital.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.hospital.HospitalResWithReviewDTO;
 import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
 import com.likelion.hospital.domain.dto.review.ReviewResDTO;
@@ -9,6 +10,7 @@ import com.likelion.hospital.service.HospitalService;
 import com.likelion.hospital.service.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -21,11 +23,13 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HospitalApiController.class)
+@ImportAutoConfiguration(SecurityConfig.class)
 class HospitalApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -83,7 +87,8 @@ class HospitalApiControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hospitals/" + hospitalId + "/reviews")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reviewReqDTO)))
+                        .content(objectMapper.writeValueAsString(reviewReqDTO))
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.author").exists())

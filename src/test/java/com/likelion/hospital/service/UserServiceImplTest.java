@@ -10,24 +10,29 @@ import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 class UserServiceImplTest {
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
-    private final UserService userService = new UserServiceImpl(userRepository);
+    private final PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
+    private final UserService userService = new UserServiceImpl(userRepository, passwordEncoder);
 
     @Test
     void join_정상() {
         String USERNAME = "test";
         String EMAIL = "test@gmail.com";
+        String PASSWORD = "password";
         SignUpDTO signUpDTO = SignUpDTO.builder()
                 .userName(USERNAME)
                 .emailAddress(EMAIL)
+                .password(PASSWORD)
                 .build();
         User saved = User.builder()
                 .id(1L)
@@ -35,6 +40,7 @@ class UserServiceImplTest {
                 .emailAddress(EMAIL)
                 .build();
         given(userRepository.findByUserName("test")).willReturn(Optional.empty());
+        given(passwordEncoder.encode(PASSWORD)).willReturn(PASSWORD);
         given(userRepository.save(any(User.class))).willReturn(saved);
 
         UserResponse result = userService.join(signUpDTO);
@@ -80,6 +86,7 @@ class UserServiceImplTest {
                 .build();
 
         given(userRepository.findByUserName(USERNAME)).willReturn(Optional.of(user));
+        given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
         UserResponse result = userService.login(signInDTO);
 
