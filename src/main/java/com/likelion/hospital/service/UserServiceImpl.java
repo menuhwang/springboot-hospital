@@ -1,6 +1,7 @@
 package com.likelion.hospital.service;
 
 import com.likelion.hospital.domain.dto.user.SignInDTO;
+import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.domain.entity.User;
@@ -8,6 +9,7 @@ import com.likelion.hospital.exception.conflict.DuplicateUsernameException;
 import com.likelion.hospital.exception.forbidden.SignInForbiddenException;
 import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.UserRepository;
+import com.likelion.hospital.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Override
     public UserResponse join(SignUpDTO dto) {
@@ -29,9 +32,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse login(SignInDTO dto) {
+    public SignInToken login(SignInDTO dto) {
         User user = userRepository.findByUserName(dto.getUserName()).orElseThrow(UserNotFoundException::new);
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) throw new SignInForbiddenException();
-        return UserResponse.of(user);
+        return new SignInToken(jwtTokenUtil.generateToken(user));
     }
 }

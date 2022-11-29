@@ -1,6 +1,7 @@
 package com.likelion.hospital.controller.api;
 
 import com.likelion.hospital.domain.dto.user.SignInDTO;
+import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.service.UserService;
@@ -23,7 +24,7 @@ public class SignApiController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<UserResponse> login(@RequestBody SignInDTO dto) {
+    public ResponseEntity<SignInToken> login(@RequestBody SignInDTO dto) {
         return ResponseEntity.ok(userService.login(dto));
     }
 }
