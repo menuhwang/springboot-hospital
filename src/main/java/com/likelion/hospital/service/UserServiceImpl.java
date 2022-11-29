@@ -9,6 +9,7 @@ import com.likelion.hospital.exception.forbidden.SignInForbiddenException;
 import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,18 +18,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse join(SignUpDTO dto) {
         Optional<User> userOptional = userRepository.findByUserName(dto.getUserName());
         if (userOptional.isPresent()) throw new DuplicateUsernameException();
+        dto.encodePassword(passwordEncoder.encode(dto.getPassword()));
         return UserResponse.of(userRepository.save(dto.toEntity()));
     }
 
     @Override
     public UserResponse login(SignInDTO dto) {
         User user = userRepository.findByUserName(dto.getUserName()).orElseThrow(UserNotFoundException::new);
-        if (!dto.getPassword().equals(user.getPassword())) throw new SignInForbiddenException();
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) throw new SignInForbiddenException();
         return UserResponse.of(user);
     }
 }
