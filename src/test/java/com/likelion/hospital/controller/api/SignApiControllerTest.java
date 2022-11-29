@@ -3,6 +3,7 @@ package com.likelion.hospital.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.user.SignInDTO;
+import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.exception.conflict.DuplicateUsernameException;
@@ -98,14 +99,15 @@ class SignApiControllerTest {
                 .emailAddress(EMAIL)
                 .build();
 
-        given(userService.login(any(SignInDTO.class))).willReturn(userResponse);
+        SignInToken token = new SignInToken("mockToken");
+
+        given(userService.login(any(SignInDTO.class))).willReturn(token);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/signin")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signInDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userName").value(USERNAME))
-                .andExpect(jsonPath("$.emailAddress").value(EMAIL))
+                .andExpect(jsonPath("$.token").value("mockToken"))
                 .andDo(print());
 
         verify(userService).login(any(SignInDTO.class));

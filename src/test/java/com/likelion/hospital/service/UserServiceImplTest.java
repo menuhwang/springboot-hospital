@@ -1,6 +1,7 @@
 package com.likelion.hospital.service;
 
 import com.likelion.hospital.domain.dto.user.SignInDTO;
+import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.domain.entity.User;
@@ -8,6 +9,7 @@ import com.likelion.hospital.exception.conflict.DuplicateUsernameException;
 import com.likelion.hospital.exception.forbidden.SignInForbiddenException;
 import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.UserRepository;
+import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +24,8 @@ import static org.mockito.BDDMockito.given;
 class UserServiceImplTest {
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private final PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
-    private final UserService userService = new UserServiceImpl(userRepository, passwordEncoder);
+    private final JwtTokenUtil jwtTokenUtil = Mockito.mock(JwtTokenUtil.class);
+    private final UserService userService = new UserServiceImpl(userRepository, passwordEncoder, jwtTokenUtil);
 
     @Test
     void join_정상() {
@@ -88,10 +91,9 @@ class UserServiceImplTest {
         given(userRepository.findByUserName(USERNAME)).willReturn(Optional.of(user));
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
-        UserResponse result = userService.login(signInDTO);
+        SignInToken result = userService.login(signInDTO);
 
-        assertEquals(USERNAME, result.getUserName());
-        assertEquals(EMAIL, result.getEmailAddress());
+        assertNotNull(result.getToken());
     }
 
     @Test
