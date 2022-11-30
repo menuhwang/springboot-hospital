@@ -1,6 +1,7 @@
 package com.likelion.hospital.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,8 +19,10 @@ public class SecurityConfig {
         http.cors();
 
         http.authorizeHttpRequests()
-                .antMatchers("/api/v1/hospitals/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/*", "/hospitals*", "/boards*", "/boards/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/hospitals", "/api/v1/boards", "/api/v1/boards/*", "/api/v1/replies").permitAll()
                 .antMatchers("/api/v1/users/signup", "/api/v1/users/signin").permitAll()
+                .antMatchers("/boards/new", "/boards/edit/*").authenticated()
                 .anyRequest().authenticated();
 
         return http.build();
