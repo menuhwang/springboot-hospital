@@ -1,0 +1,57 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5 px-5">
+    <div class="card mt-5 mx-5">
+        <div class="card-body">
+            <h1 class="card-title">로그인</h1>
+            <div class="mb-3">
+                <label for="username" class="form-label">ID</label>
+                <input type="text" class="form-control" id="username" placeholder="아이디">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">PW</label>
+                <input type="password" class="form-control" id="password" placeholder="비밀번호">
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary float-end" onclick="login()">Sign in</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    if (token !== "") {
+        alert("잘못된 접근입니다.")
+        location.href = "/";
+    }
+
+    async function login() {
+        const userName = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const data = {userName, password};
+        const response = await fetch("/api/v1/users/signin", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            const body = await response.json();
+            console.log(body.token);
+            location.href = "/";
+        } else {
+            const body = await response.json();
+            alert(body.message);
+        }
+    }
+</script>
+{{>layouts/footer}}
+{{>bootstrap/script}}
+</body>
+</html>

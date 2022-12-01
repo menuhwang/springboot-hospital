@@ -16,7 +16,7 @@ public class UserResponse {
     public static UserResponse of(User user) {
         return UserResponse.builder()
                 .id(user.getId())
-                .userName(user.getUserName())
+                .userName(user.getUsername())
                 .emailAddress(user.getEmailAddress())
                 .build();
     }

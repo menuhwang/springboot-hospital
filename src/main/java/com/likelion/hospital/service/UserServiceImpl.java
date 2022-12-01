@@ -11,6 +11,8 @@ import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.UserRepository;
 import com.likelion.hospital.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +38,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserName(dto.getUserName()).orElseThrow(UserNotFoundException::new);
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) throw new SignInForbiddenException();
         return new SignInToken(jwtTokenUtil.generateToken(user));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("유저 정보 없음. username:" + username));
+        return user;
     }
 }

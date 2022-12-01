@@ -21,6 +21,33 @@
                     </ul>
                 </li>
             </ul>
+            <div>
+                <a type="button" class="btn btn-primary" id="signin-btn" href="/login">로그인</a>
+                <a hidden type="button" class="btn btn-primary" id="signout-btn">로그아웃</a>
+            </div>
         </div>
     </div>
 </nav>
+<script>
+    let token = getCookie('token');
+    const signinBtn = document.getElementById("signin-btn");
+    const signoutBtn = document.getElementById("signout-btn");
+    if (token !== "") {
+        signinBtn.hidden = true;
+        signoutBtn.hidden = false;
+    }
+
+    function getCookie(key) {
+        key = key + '=';
+        const cookieData = document.cookie;
+        let start = cookieData.indexOf(key);
+        let cValue = '';
+        if (start !== -1) {
+            start += key.length;
+            let end = cookieData.indexOf(';', start);
+            if (end === -1) end = cookieData.length;
+            cValue = cookieData.substring(start, end);
+        }
+        return cValue;
+    }
+</script>

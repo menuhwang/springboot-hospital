@@ -6,6 +6,8 @@ import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +27,13 @@ public class SignApiController {
 
     @PostMapping("/signin")
     public ResponseEntity<SignInToken> login(@RequestBody SignInDTO dto) {
-        return ResponseEntity.ok(userService.login(dto));
+        SignInToken signInToken = userService.login(dto);
+        ResponseCookie cookie = ResponseCookie.from("token", signInToken.getToken())
+                .httpOnly(false)
+                .path("/")
+                .build();
+        return ResponseEntity.status(200)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(signInToken);
     }
 }

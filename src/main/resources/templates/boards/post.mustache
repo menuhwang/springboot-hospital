@@ -27,17 +27,22 @@
 </div>
 {{>layouts/footer}}
 <script>
-    getOne({{id}});
-    getReplies({{id}});
+
+    getOne({{id}}).then(() => getReplies({{id}}));
+
     async function getOne(id) {
         const title = document.getElementById("board-post-title");
         const author = document.getElementById("board-post-author");
         const content = document.getElementById("board-post-content");
-        const data = await fetch(`/api/v1/boards/${id}`).then(res => {
-            if (res.ok) {
-                return res.json();
-            }
+        const response = await fetch(`/api/v1/boards/${id}`, {
+            headers: {'Authorization': token || getCookie('token')}
         });
+        let data;
+        if (response.ok) {
+            data = await response.json();
+        } else {
+            location.href = '/login';
+        }
         console.log(data);
         title.innerText = data.title;
         author.innerText = data.author;
@@ -45,11 +50,14 @@
     }
 
     async function getReplies(id) {
-        const data = await fetch(`/api/v1/replies?board=${id}`).then(res => {
-            if (res.ok) {
-                return res.json();
-            }
+        const response = await fetch(`/api/v1/replies?board=${id}`, {
+            headers: {'Authorization': token || getCookie('token')}
         });
+
+        let data;
+        if (response.ok) {
+            data = await response.json();
+        }
         console.log(data);
         const replies = document.getElementById("replies-wrap");
         for (let i = 0; i < data.length; i++) {
