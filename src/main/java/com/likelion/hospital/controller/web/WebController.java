@@ -10,8 +10,13 @@ public class WebController {
         return "index";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/users/login")
     public String login() {
         return "users/login";
+    }
+
+    @GetMapping("/users/logout")
+    public String logout() {
+        return "users/logout";
     }
 }

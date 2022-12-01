@@ -36,4 +36,16 @@ public class SignApiController {
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(signInToken);
     }
+
+    @PostMapping("/signout")
+    public ResponseEntity<Void> logout() {
+        ResponseCookie delCookie = ResponseCookie.from("token", "")
+                .httpOnly(false)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseEntity.status(204)
+                .header(HttpHeaders.SET_COOKIE, delCookie.toString())
+                .build();
+    }
 }
