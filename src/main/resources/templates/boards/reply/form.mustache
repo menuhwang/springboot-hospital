@@ -21,9 +21,12 @@
                 const data = {boardId, author, content};
                 console.log(data);
                 const response = await fetch(`/api/v1/replies`, {
-                    method : "POST",
-                    headers : {'Content-Type' : 'application/json'},
-                    body : JSON.stringify(data)
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token || getCookie('token')
+                    },
+                    body: JSON.stringify(data)
                 })
                 if (response.ok) location.href = "/boards/{{id}}";
             }

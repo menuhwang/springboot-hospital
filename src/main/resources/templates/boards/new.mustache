@@ -38,9 +38,12 @@
         const data = {title, author, content};
         console.log(data);
         const response = await fetch(`/api/v1/boards`, {
-            method : "POST",
-            headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify({title, author, content})
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token || getCookie('token')
+            },
+            body: JSON.stringify({title, author, content})
         })
         if (response.ok) location.href = "/boards";
     }
