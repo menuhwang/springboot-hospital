@@ -24,7 +24,7 @@ public class Board {
     private String title;
     @Column(nullable = false)
     private String content;
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<Reply> replies = new ArrayList<>();
 
