@@ -29,8 +29,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse join(SignUpDTO dto) {
         Optional<User> userOptional = userRepository.findByUserName(dto.getUserName());
         if (userOptional.isPresent()) throw new DuplicateUsernameException();
-        dto.encodePassword(passwordEncoder.encode(dto.getPassword()));
-        return UserResponse.of(userRepository.save(dto.toEntity()));
+        return UserResponse.of(userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()))));
     }
 
     @Override

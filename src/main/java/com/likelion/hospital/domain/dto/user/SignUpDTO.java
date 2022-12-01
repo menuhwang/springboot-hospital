@@ -15,14 +15,10 @@ public class SignUpDTO {
     private String password;
     private String emailAddress;
 
-    public void encodePassword(String encoded) {
-        this.password = encoded;
-    }
-
-    public User toEntity() {
+    public User toEntity(String encodePassword) {
         return User.builder()
                 .userName(userName)
-                .password(password)
+                .password(encodePassword)
                 .emailAddress(emailAddress)
                 .build();
     }
