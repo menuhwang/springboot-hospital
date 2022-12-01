@@ -76,7 +76,8 @@
 
     async function deleteById(id) {
         const response = await fetch(`/api/v1/boards/${id}`, {
-            method:'DELETE'
+            method: 'DELETE',
+            headers: {'Authorization': token || getCookie('token')}
         });
         if (response.ok) location.href = '/boards'
     }

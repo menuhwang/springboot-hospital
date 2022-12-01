@@ -32,6 +32,7 @@
 {{>layouts/footer}}
 <script>
     get({{id}});
+
     async function patch(id) {
         const title = document.getElementById("board-post-title").value;
         const author = document.getElementById("board-post-author").value;
@@ -39,12 +40,16 @@
         const data = {title, author, content};
         console.log(data);
         const response = await fetch(`/api/v1/boards/${id}`, {
-            method : "PATCH",
-            headers : {'Content-Type' : 'application/json'},
-            body : JSON.stringify({title, author, content})
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token || getCookie('token')
+            },
+            body: JSON.stringify({title, author, content})
         })
         if (response.ok) location.href = `/boards/${id}`;
     }
+
     async function get(id) {
         let title = document.getElementById("board-post-title");
         let author = document.getElementById("board-post-author");
