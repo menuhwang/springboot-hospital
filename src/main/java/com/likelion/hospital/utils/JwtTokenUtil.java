@@ -20,7 +20,6 @@ public class JwtTokenUtil {
     private final String ID_KEY = "id";
 
     public JwtTokenUtil(@Value("${util.jwt.secret}") String secret, @Value("${util.jwt.tokenExpiration}") long tokenExpiration) {
-        System.out.println(tokenExpiration);
         this.secret = secret;
         this.tokenExpiration = tokenExpiration * 1000;
     }
