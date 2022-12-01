@@ -1,7 +1,6 @@
 package com.likelion.hospital.service;
 
 import com.likelion.hospital.domain.dto.user.SignInDTO;
-import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
 import com.likelion.hospital.domain.entity.User;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 class UserServiceImplTest {
@@ -70,30 +68,6 @@ class UserServiceImplTest {
         given(userRepository.findByUserName("test")).willReturn(Optional.of(user));
 
         assertThrows(DuplicateUsernameException.class, () -> userService.join(signUpDTO));
-    }
-
-    @Test
-    void login_정상() {
-        String USERNAME = "test";
-        String PASSWORD = "password";
-        String EMAIL = "test@gmail.com";
-        SignInDTO signInDTO = SignInDTO.builder()
-                .userName(USERNAME)
-                .password(PASSWORD)
-                .build();
-
-        User user = User.builder()
-                .userName(USERNAME)
-                .password(PASSWORD)
-                .emailAddress(EMAIL)
-                .build();
-
-        given(userRepository.findByUserName(USERNAME)).willReturn(Optional.of(user));
-        given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
-
-        SignInToken result = userService.login(signInDTO);
-
-        assertNotNull(result.getToken());
     }
 
     @Test

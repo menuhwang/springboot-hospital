@@ -1,13 +1,17 @@
 package com.likelion.hospital.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
 import com.likelion.hospital.service.ReplyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,8 +24,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ReplyApiController.class)
+@WebMvcTest(value = ReplyApiController.class,
+        excludeAutoConfiguration = SecurityAutoConfiguration.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
 class ReplyApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -46,16 +53,17 @@ class ReplyApiControllerTest {
         given(replyService.create(any(ReplyReqDTO.class))).willReturn(replyResDTO);
 
         mockMvc.perform(post("/api/v1/replies")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("utf-8")
-                .content(objectMapper.writeValueAsString(replyReqDTO)))
-                .andDo(print())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8")
+                        .content(objectMapper.writeValueAsString(replyReqDTO)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.author").exists())
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.content").value("content"));
+                .andExpect(jsonPath("$.content").value("content"))
+                .andDo(print());
     }
 
     @Test
