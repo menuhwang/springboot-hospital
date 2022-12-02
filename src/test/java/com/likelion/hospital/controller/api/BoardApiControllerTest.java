@@ -5,19 +5,17 @@ import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.BoardService;
-import org.junit.jupiter.api.BeforeEach;
+import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -28,30 +26,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = BoardApiController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+@WebMvcTest(BoardApiController.class)
+@ImportAutoConfiguration(SecurityConfig.class)
 class BoardApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private WebApplicationContext webApplicationContext;
     @MockBean
     private BoardService boardService;
+    @MockBean
+    private JwtTokenUtil jwtTokenUtil;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .alwaysExpect(status().isOk())
-                .alwaysExpect(jsonPath("$.id").exists())
-                .alwaysExpect(jsonPath("$.author").exists())
-                .alwaysExpect(jsonPath("$.title").exists())
-                .alwaysExpect(jsonPath("$.content").exists())
-                .alwaysDo(print())
-                .build();
-    }
+    private final String AUTHORIZATION = "Authorization";
+    private final String TOKEN = "testMockToken";
+    private final User USER = new User(1L, "testUser", "password", "testUser@email.com");
 
     BoardResDTO boardResDTO = new BoardResDTO(1L, "author", "title", "content");
     BoardResWithReplyDTO boardResWithReplyDTO = BoardResWithReplyDTO.builder()
@@ -62,21 +50,45 @@ class BoardApiControllerTest {
             .build();
 
     @Test
+    @WithMockUser
     void create() throws Exception {
         BoardReqDTO editDTO = BoardReqDTO.builder()
                 .author("author")
                 .title("title")
                 .content("content")
                 .build();
+
         given(boardService.create(any(BoardReqDTO.class))).willReturn(boardResDTO);
+
         mockMvc.perform(post("/api/v1/boards")
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding("utf-8") //objectMapper 사용시 RequestBody가 <no character encoding set> 이라고 뜨는 문제가 발생. 따라서 인코딩 설정.
-                .content(objectMapper.writeValueAsString(editDTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8") //objectMapper 사용시 RequestBody가 <no character encoding set> 이라고 뜨는 문제가 발생. 따라서 인코딩 설정.
+                        .content(objectMapper.writeValueAsString(editDTO)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.author").value("author"))
                 .andExpect(jsonPath("$.title").value("title"))
-                .andExpect(jsonPath("$.content").value("content"));
+                .andExpect(jsonPath("$.content").value("content"))
+                .andDo(print());
+
         verify(boardService).create(any(BoardReqDTO.class));
+    }
+
+    @Test
+    void create_No_User_Login() throws Exception {
+        BoardReqDTO editDTO = BoardReqDTO.builder()
+                .author("author")
+                .title("title")
+                .content("content")
+                .build();
+
+        given(boardService.create(any(BoardReqDTO.class))).willReturn(boardResDTO);
+
+        mockMvc.perform(post("/api/v1/boards")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("utf-8") //objectMapper 사용시 RequestBody가 <no character encoding set> 이라고 뜨는 문제가 발생. 따라서 인코딩 설정.
+                        .content(objectMapper.writeValueAsString(editDTO)))
+                .andExpect(status().is(403))
+                .andDo(print());
     }
 
     @Test

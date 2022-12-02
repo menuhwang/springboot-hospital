@@ -8,14 +8,14 @@ import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.service.HospitalService;
 import com.likelion.hospital.service.ReviewService;
+import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -30,9 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = HospitalApiController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+@WebMvcTest(HospitalApiController.class)
+@ImportAutoConfiguration(SecurityConfig.class)
 class HospitalApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -40,6 +39,8 @@ class HospitalApiControllerTest {
     private HospitalService hospitalService;
     @MockBean
     private ReviewService reviewService;
+    @MockBean
+    private JwtTokenUtil jwtTokenUtil;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Hospital hospital = Hospital.builder()
@@ -55,6 +56,7 @@ class HospitalApiControllerTest {
             .build();
 
     @Test
+    @WithMockUser
     void findById() throws Exception {
         Integer ID = 2321;
         given(hospitalService.findById(ID)).willReturn(HospitalResWithReviewDTO.of(hospital));
@@ -73,6 +75,7 @@ class HospitalApiControllerTest {
     }
 
     @Test
+    @WithMockUser
     void createReview() throws Exception {
         Integer hospitalId = 1;
         ReviewReqDTO reviewReqDTO = ReviewReqDTO.builder()
@@ -100,6 +103,7 @@ class HospitalApiControllerTest {
     }
 
     @Test
+    @WithMockUser
     void findReviewsByHospital() throws Exception {
         Integer hospitalId = 1;
         List<ReviewResDTO> reviewResDTOList = new ArrayList<>();

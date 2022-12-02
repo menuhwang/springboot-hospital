@@ -5,14 +5,14 @@ import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
 import com.likelion.hospital.service.ReplyService;
+import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -26,17 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = ReplyApiController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+@WebMvcTest(ReplyApiController.class)
+@ImportAutoConfiguration(SecurityConfig.class)
 class ReplyApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private ReplyService replyService;
+    @MockBean
+    private JwtTokenUtil jwtTokenUtil;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @WithMockUser
     void create() throws Exception {
         ReplyReqDTO replyReqDTO = ReplyReqDTO.builder()
                 .boardId(1L)
@@ -67,6 +69,7 @@ class ReplyApiControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getRepliesByBoardId() throws Exception {
         List<ReplyResDTO> replyResDTOList = new ArrayList<>();
         for (long i = 1; i < 5L; i++) {
