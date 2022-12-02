@@ -58,9 +58,11 @@ public class JwtTokenUtil {
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        Long id = Long.parseLong(claims.get(ID_KEY).toString());
         String username = claims.get(USERNAME_KEY).toString();
 
         User user = User.builder()
+                .id(id)
                 .userName(username)
                 .password(token)
                 .build();

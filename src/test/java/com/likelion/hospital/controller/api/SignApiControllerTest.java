@@ -6,17 +6,18 @@ import com.likelion.hospital.domain.dto.user.SignInDTO;
 import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.exception.conflict.DuplicateUsernameException;
 import com.likelion.hospital.exception.forbidden.SignInForbiddenException;
 import com.likelion.hospital.service.UserService;
+import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -27,14 +28,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(value = SignApiController.class,
-        excludeAutoConfiguration = SecurityAutoConfiguration.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class))
+@WebMvcTest(SignApiController.class)
+@ImportAutoConfiguration(SecurityConfig.class)
 class SignApiControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private UserService userService;
+    @MockBean
+    private JwtTokenUtil jwtTokenUtil;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
@@ -136,5 +138,23 @@ class SignApiControllerTest {
                 .andDo(print());
 
         verify(userService).login(any(SignInDTO.class));
+    }
+
+    @Test
+    void 로그인_상태_확인() throws Exception {
+        String testToken = "testMockToken";
+        User user = new User(1L, "testUser", "password", "testUser@email.com");
+        given(jwtTokenUtil.validateToken(testToken)).willReturn(true);
+        given(jwtTokenUtil.getAuthentication(testToken)).willReturn(new UsernamePasswordAuthenticationToken(user, testToken, user.getAuthorities()));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
+                        .header("Authorization", testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.username").exists())
+                .andDo(print());
+
+        verify(jwtTokenUtil).validateToken(testToken);
+        verify(jwtTokenUtil).getAuthentication(testToken);
     }
 }
