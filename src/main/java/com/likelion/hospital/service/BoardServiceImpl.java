@@ -4,8 +4,11 @@ import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.domain.entity.Board;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.exception.notfound.BoardNotFoundException;
+import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.BoardRepository;
+import com.likelion.hospital.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public BoardResDTO create(BoardReqDTO boardDTO) {
-        return BoardResDTO.of(boardRepository.save(boardDTO.toEntity()));
+    public BoardResDTO create(BoardReqDTO boardDTO, User me) {
+        User user = userRepository.findById(me.getId()).orElseThrow(UserNotFoundException::new);
+        return BoardResDTO.of(boardRepository.save(boardDTO.toEntity(user)));
     }
 
     @Override
@@ -38,7 +43,6 @@ public class BoardServiceImpl implements BoardService {
     @Transactional // 더티 체킹
     public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        board.updateAuthor(boardReqDTO.getAuthor());
         board.updateTitle(boardReqDTO.getTitle());
         board.updateContent(boardReqDTO.getContent());
         return BoardResDTO.of(board);

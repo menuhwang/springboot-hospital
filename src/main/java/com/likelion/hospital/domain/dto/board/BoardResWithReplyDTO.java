@@ -22,7 +22,7 @@ public class BoardResWithReplyDTO {
     public static BoardResWithReplyDTO of(Board board) {
         return BoardResWithReplyDTO.builder()
                 .id(board.getId())
-                .author(board.getAuthor())
+                .author(board.getAuthor().getUsername())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .reply(board.getReplies().stream().map(ReplyResDTO::of).collect(Collectors.toList()))

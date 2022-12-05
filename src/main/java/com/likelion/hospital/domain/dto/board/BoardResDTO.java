@@ -19,7 +19,7 @@ public class BoardResDTO {
     public static BoardResDTO of(Board entity) {
         return BoardResDTO.builder()
                 .id(entity.getId())
-                .author(entity.getAuthor())
+                .author(entity.getAuthor().getUsername())
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .build();

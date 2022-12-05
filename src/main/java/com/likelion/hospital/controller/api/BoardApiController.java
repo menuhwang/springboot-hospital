@@ -3,6 +3,7 @@ package com.likelion.hospital.controller.api;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -20,9 +22,9 @@ public class BoardApiController {
     private final BoardService boardService;
 
     @PostMapping("")
-    public ResponseEntity<BoardResDTO> create(@RequestBody BoardReqDTO boardReqDTO) {
-        log.info("author:{}, title:{}", boardReqDTO.getAuthor(), boardReqDTO.getTitle());
-        return ResponseEntity.ok(boardService.create(boardReqDTO));
+    public ResponseEntity<BoardResDTO> create(@RequestBody BoardReqDTO boardReqDTO, @AuthenticationPrincipal User me) {
+        log.info("author:{}, title:{}", me.getUsername(), boardReqDTO.getTitle());
+        return ResponseEntity.ok(boardService.create(boardReqDTO, me));
     }
 
     @GetMapping("")

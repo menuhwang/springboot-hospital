@@ -11,11 +11,6 @@
     <h1>게시글 작성</h1>
     <hr>
     <div class="mb-3">
-        <label class="form-label">작성자</label>
-        <!--- name 속성안에 Dto의 필드명을 써주면 된다 -->
-        <input type="text" class="form-control" id="board-post-author" name="author">
-    </div>
-    <div class="mb-3">
         <label class="form-label">제목</label>
         <!--- name 속성안에 Dto의 필드명을 써주면 된다 -->
         <input type="text" class="form-control" id="board-post-title" name="title">
@@ -33,9 +28,8 @@
 <script>
     async function post() {
         const title = document.getElementById("board-post-title").value;
-        const author = document.getElementById("board-post-author").value;
         const content = document.getElementById("board-post-content").value;
-        const data = {title, author, content};
+        const data = {title, content};
         console.log(data);
         const response = await fetch(`/api/v1/boards`, {
             method: "POST",
@@ -43,7 +37,7 @@
                 'Content-Type': 'application/json',
                 'Authorization': token || getCookie('token')
             },
-            body: JSON.stringify({title, author, content})
+            body: JSON.stringify(data)
         })
         if (response.ok) location.href = "/boards";
     }

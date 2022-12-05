@@ -18,8 +18,8 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String author;
+    @ManyToOne(optional = false)
+    private User author;
     @Column
     private String title;
     @Column(nullable = false)
@@ -27,10 +27,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = {CascadeType.REMOVE})
     @Builder.Default
     private List<Reply> replies = new ArrayList<>();
-
-    public void updateAuthor(String author) {
-        if (author != null) this.author = author;
-    }
 
     public void updateTitle(String title) {
         if (title != null) this.title = title;
