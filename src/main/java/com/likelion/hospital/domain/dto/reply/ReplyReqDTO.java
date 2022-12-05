@@ -1,5 +1,6 @@
 package com.likelion.hospital.domain.dto.reply;
 
+import com.likelion.hospital.domain.entity.Board;
 import com.likelion.hospital.domain.entity.Reply;
 import lombok.*;
 
@@ -13,9 +14,10 @@ public class ReplyReqDTO {
     private String content;
     private Long boardId;
 
-    public Reply toEntity() {
+    public Reply toEntity(Board board) {
         return Reply.builder()
                 .author(author)
+                .board(board)
                 .content(content)
                 .build();
     }

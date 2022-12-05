@@ -24,8 +24,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     public ReplyResDTO create(ReplyReqDTO replyReqDTO) throws RuntimeException{
         Board board = boardRepository.findById(replyReqDTO.getBoardId()).orElseThrow(BoardNotFoundException::new);
-        Reply reply = replyReqDTO.toEntity();
-        reply.setBoard(board);
+        Reply reply = replyReqDTO.toEntity(board);
         Reply saved = replyRepository.save(reply);
         return ReplyResDTO.of(saved);
     }
