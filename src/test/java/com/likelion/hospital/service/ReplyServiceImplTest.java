@@ -4,6 +4,7 @@ import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
 import com.likelion.hospital.domain.entity.Board;
 import com.likelion.hospital.domain.entity.Reply;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.repository.BoardRepository;
 import com.likelion.hospital.repository.ReplyRepository;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,12 @@ class ReplyServiceImplTest {
 
     private final ReplyService replyService = new ReplyServiceImpl(boardRepository, replyRepository);
 
+    User user = User.builder()
+            .id(1L)
+            .userName("tester")
+            .emailAddress("tester@test.com")
+            .build();
+
     @Test
     void create() {
         // given
@@ -33,7 +40,7 @@ class ReplyServiceImplTest {
 
         Board board = Board.builder()
                 .id(1L)
-                .author("author")
+                .author(user)
                 .title("title")
                 .content("content")
                 .build();

@@ -53,12 +53,11 @@ class BoardApiControllerTest {
     @WithMockUser
     void create() throws Exception {
         BoardReqDTO editDTO = BoardReqDTO.builder()
-                .author("author")
                 .title("title")
                 .content("content")
                 .build();
 
-        given(boardService.create(any(BoardReqDTO.class))).willReturn(boardResDTO);
+        given(boardService.create(any(BoardReqDTO.class), any(User.class))).willReturn(boardResDTO);
 
         mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,18 +69,17 @@ class BoardApiControllerTest {
                 .andExpect(jsonPath("$.content").value("content"))
                 .andDo(print());
 
-        verify(boardService).create(any(BoardReqDTO.class));
+        verify(boardService).create(any(BoardReqDTO.class), any(User.class));
     }
 
     @Test
     void create_No_User_Login() throws Exception {
         BoardReqDTO editDTO = BoardReqDTO.builder()
-                .author("author")
                 .title("title")
                 .content("content")
                 .build();
 
-        given(boardService.create(any(BoardReqDTO.class))).willReturn(boardResDTO);
+        given(boardService.create(any(BoardReqDTO.class), any(User.class))).willReturn(boardResDTO);
 
         mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +103,6 @@ class BoardApiControllerTest {
     @Test
     void editOneById() throws Exception {
         BoardReqDTO editDTO = BoardReqDTO.builder()
-                .author("edit-author")
                 .title("edit-title")
                 .content("edit-content")
                 .build();
