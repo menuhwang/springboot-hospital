@@ -46,13 +46,13 @@ class SignApiControllerTest {
         String EMAIL = "test@gmail.com";
         String PASSWORD = "password";
         SignUpDTO signUpDTO = SignUpDTO.builder()
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .password(PASSWORD)
                 .build();
         UserResponse userResponse = UserResponse.builder()
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .build();
 
         given(userService.join(any(SignUpDTO.class))).willReturn(userResponse);
@@ -74,8 +74,8 @@ class SignApiControllerTest {
         String EMAIL = "test@gmail.com";
         String PASSWORD = "password";
         SignUpDTO signUpDTO = SignUpDTO.builder()
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .password(PASSWORD)
                 .build();
 
@@ -96,13 +96,13 @@ class SignApiControllerTest {
         String EMAIL = "test@gmail.com";
         String PASSWORD = "password";
         SignInDTO signInDTO = SignInDTO.builder()
-                .userName(USERNAME)
+                .username(USERNAME)
                 .password(PASSWORD)
                 .build();
 
         UserResponse userResponse = UserResponse.builder()
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .build();
 
         SignInToken token = new SignInToken("mockToken");
@@ -125,7 +125,7 @@ class SignApiControllerTest {
         String EMAIL = "test@gmail.com";
         String PASSWORD = "password";
         SignInDTO signInDTO = SignInDTO.builder()
-                .userName(USERNAME)
+                .username(USERNAME)
                 .password(PASSWORD)
                 .build();
 

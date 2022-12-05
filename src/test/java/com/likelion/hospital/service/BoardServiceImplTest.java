@@ -30,8 +30,8 @@ class BoardServiceImplTest {
 
     User user = User.builder()
             .id(1L)
-            .userName("tester")
-            .emailAddress("tester@test.com")
+            .username("tester")
+            .email("tester@test.com")
             .build();
 
     BoardReqDTO boardReqDTO = BoardReqDTO.builder()

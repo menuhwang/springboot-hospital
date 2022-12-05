@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class SignUpDTO {
-    private String userName;
+    private String username;
     private String password;
-    private String emailAddress;
+    private String email;
 
     public User toEntity(String encodePassword) {
         return User.builder()
-                .userName(userName)
+                .username(username)
                 .password(encodePassword)
-                .emailAddress(emailAddress)
+                .email(email)
                 .build();
     }
 }

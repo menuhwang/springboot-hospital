@@ -32,9 +32,9 @@
     }
 
     async function login() {
-        const userName = document.getElementById("username").value;
+        const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-        const data = {userName, password};
+        const data = {username, password};
         const response = await fetch("/api/v1/users/signin", {
             method: "POST",
             headers: {'Content-Type': 'application/json'},

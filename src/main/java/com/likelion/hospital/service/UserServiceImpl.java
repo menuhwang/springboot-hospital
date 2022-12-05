@@ -27,21 +27,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse join(SignUpDTO dto) {
-        Optional<User> userOptional = userRepository.findByUserName(dto.getUserName());
+        Optional<User> userOptional = userRepository.findByUsername(dto.getUsername());
         if (userOptional.isPresent()) throw new DuplicateUsernameException();
         return UserResponse.of(userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword()))));
     }
 
     @Override
     public SignInToken login(SignInDTO dto) {
-        User user = userRepository.findByUserName(dto.getUserName()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(dto.getUsername()).orElseThrow(UserNotFoundException::new);
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) throw new SignInForbiddenException();
         return new SignInToken(jwtTokenUtil.generateToken(user));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username).orElseThrow(() -> new UsernameNotFoundException("유저 정보 없음. username:" + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("유저 정보 없음. username:" + username));
         return user;
     }
 }

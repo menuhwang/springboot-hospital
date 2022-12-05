@@ -63,7 +63,7 @@ public class JwtTokenUtil {
 
         User user = User.builder()
                 .id(id)
-                .userName(username)
+                .username(username)
                 .password(token)
                 .build();
 

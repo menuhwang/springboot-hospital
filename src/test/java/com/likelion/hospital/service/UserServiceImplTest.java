@@ -31,24 +31,24 @@ class UserServiceImplTest {
         String EMAIL = "test@gmail.com";
         String PASSWORD = "password";
         SignUpDTO signUpDTO = SignUpDTO.builder()
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .password(PASSWORD)
                 .build();
         User saved = User.builder()
                 .id(1L)
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .build();
-        given(userRepository.findByUserName("test")).willReturn(Optional.empty());
+        given(userRepository.findByUsername("test")).willReturn(Optional.empty());
         given(passwordEncoder.encode(PASSWORD)).willReturn(PASSWORD);
         given(userRepository.save(any(User.class))).willReturn(saved);
 
         UserResponse result = userService.join(signUpDTO);
 
         assertNotNull(result.getId());
-        assertEquals(USERNAME, result.getUserName());
-        assertEquals(EMAIL, result.getEmailAddress());
+        assertEquals(USERNAME, result.getUsername());
+        assertEquals(EMAIL, result.getEmail());
     }
 
     @Test
@@ -56,16 +56,16 @@ class UserServiceImplTest {
         String USERNAME = "test";
         String EMAIL = "test@gmail.com";
         SignUpDTO signUpDTO = SignUpDTO.builder()
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .build();
         User user = User.builder()
                 .id(1L)
-                .userName(USERNAME)
-                .emailAddress(EMAIL)
+                .username(USERNAME)
+                .email(EMAIL)
                 .build();
 
-        given(userRepository.findByUserName("test")).willReturn(Optional.of(user));
+        given(userRepository.findByUsername("test")).willReturn(Optional.of(user));
 
         assertThrows(DuplicateUsernameException.class, () -> userService.join(signUpDTO));
     }
@@ -77,17 +77,17 @@ class UserServiceImplTest {
         String PASSWORD = "password";
         String EMAIL = "test@gmail.com";
         SignInDTO signInDTO = SignInDTO.builder()
-                .userName(USERNAME)
+                .username(USERNAME)
                 .password(WRONG_PASSWORD)
                 .build();
 
         User user = User.builder()
-                .userName(USERNAME)
+                .username(USERNAME)
                 .password(PASSWORD)
-                .emailAddress(EMAIL)
+                .email(EMAIL)
                 .build();
 
-        given(userRepository.findByUserName(USERNAME)).willReturn(Optional.of(user));
+        given(userRepository.findByUsername(USERNAME)).willReturn(Optional.of(user));
 
         assertThrows(SignInForbiddenException.class, () -> userService.login(signInDTO));
     }
@@ -98,11 +98,11 @@ class UserServiceImplTest {
         String PASSWORD = "password";
         String EMAIL = "test@gmail.com";
         SignInDTO signInDTO = SignInDTO.builder()
-                .userName(USERNAME)
+                .username(USERNAME)
                 .password(PASSWORD)
                 .build();
 
-        given(userRepository.findByUserName(USERNAME)).willReturn(Optional.empty());
+        given(userRepository.findByUsername(USERNAME)).willReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.login(signInDTO));
     }

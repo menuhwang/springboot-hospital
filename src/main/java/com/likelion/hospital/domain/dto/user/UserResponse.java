@@ -10,14 +10,14 @@ import lombok.Getter;
 @Getter
 public class UserResponse {
     private Long id;
-    private String userName;
-    private String emailAddress;
+    private String username;
+    private String email;
 
     public static UserResponse of(User user) {
         return UserResponse.builder()
                 .id(user.getId())
-                .userName(user.getUsername())
-                .emailAddress(user.getEmailAddress())
+                .username(user.getUsername())
+                .email(user.getEmail())
                 .build();
     }
 }
