@@ -30,6 +30,7 @@
 </nav>
 <script>
     let token = getCookie('token');
+    verifyToken(token);
     const signinBtn = document.getElementById("signin-btn");
     const signoutBtn = document.getElementById("signout-btn");
     if (token !== "") {
@@ -49,5 +50,17 @@
             cValue = cookieData.substring(start, end);
         }
         return cValue;
+    }
+
+    async function verifyToken(token) {
+        if (token === "") return;
+        const response = await fetch('/api/v1/users/me', {
+            headers: {'Authorization': token || getCookie('token')}
+        });
+        if (response.ok) {
+            // username 표시.
+        } else {
+            location.href = "/users/logout";
+        }
     }
 </script>
