@@ -5,10 +5,6 @@
     <div class="card-body">
         <input hidden name="boardId" id="reply-post-boardId" value="{{id}}">
         <div class="mb-3">
-            <label class="form-label">작성자</label>
-            <input type="text" class="form-control" name="author" id="reply-post-author">
-        </div>
-        <div class="mb-3">
             <label class="form-label">내용</label>
             <textarea class="form-control" rows="3" name="content" id="reply-post-content"></textarea>
         </div>
@@ -16,9 +12,8 @@
         <script>
             async function postReply() {
                 const boardId = document.getElementById("reply-post-boardId").value;
-                const author = document.getElementById("reply-post-author").value;
                 const content = document.getElementById("reply-post-content").value;
-                const data = {boardId, author, content};
+                const data = {boardId, content};
                 console.log(data);
                 const response = await fetch(`/api/v1/replies`, {
                     method: "POST",

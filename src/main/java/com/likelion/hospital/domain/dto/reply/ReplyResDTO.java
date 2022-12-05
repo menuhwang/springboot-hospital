@@ -18,7 +18,7 @@ public class ReplyResDTO {
     public static ReplyResDTO of(Reply reply) {
         return ReplyResDTO.builder()
                 .id(reply.getId())
-                .author(reply.getAuthor())
+                .author(reply.getAuthor().getUsername())
                 .content(reply.getContent())
                 .build();
     }

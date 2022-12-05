@@ -16,8 +16,8 @@ public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private String author;
+    @ManyToOne(optional = false)
+    private User author;
     @Column(nullable = false)
     private String content;
     @ManyToOne

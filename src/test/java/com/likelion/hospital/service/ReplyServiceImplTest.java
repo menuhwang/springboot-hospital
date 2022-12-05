@@ -7,6 +7,7 @@ import com.likelion.hospital.domain.entity.Reply;
 import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.repository.BoardRepository;
 import com.likelion.hospital.repository.ReplyRepository;
+import com.likelion.hospital.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -20,8 +21,8 @@ import static org.mockito.BDDMockito.given;
 class ReplyServiceImplTest {
     private final BoardRepository boardRepository = Mockito.mock(BoardRepository.class);
     private final ReplyRepository replyRepository = Mockito.mock(ReplyRepository.class);
-
-    private final ReplyService replyService = new ReplyServiceImpl(boardRepository, replyRepository);
+    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private final ReplyService replyService = new ReplyServiceImpl(boardRepository, replyRepository, userRepository);
 
     User user = User.builder()
             .id(1L)
@@ -33,7 +34,6 @@ class ReplyServiceImplTest {
     void create() {
         // given
         ReplyReqDTO replyReqDTO = ReplyReqDTO.builder()
-                .author("author")
                 .content("content")
                 .boardId(1L)
                 .build();
@@ -47,7 +47,7 @@ class ReplyServiceImplTest {
 
         Reply saved = Reply.builder()
                 .id(1L)
-                .author("author")
+                .author(user)
                 .content("content")
                 .build();
 
@@ -55,7 +55,7 @@ class ReplyServiceImplTest {
         given(replyRepository.save(any(Reply.class))).willReturn(saved);
 
         // when
-        ReplyResDTO replyResDTO = replyService.create(replyReqDTO);
+        ReplyResDTO replyResDTO = replyService.create(replyReqDTO, user);
 
         // then
         assertReply(replyReqDTO, replyResDTO);
@@ -65,7 +65,6 @@ class ReplyServiceImplTest {
     void createWhenNoBoard() {
         // given
         ReplyReqDTO replyReqDTO = ReplyReqDTO.builder()
-                .author("author")
                 .content("content")
                 .boardId(1L)
                 .build();
@@ -73,13 +72,12 @@ class ReplyServiceImplTest {
         given(boardRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when then
-        assertThrows(RuntimeException.class, () -> replyService.create(replyReqDTO));
+        assertThrows(RuntimeException.class, () -> replyService.create(replyReqDTO, user));
         // any()는 mocking 할때만 사용할 것!
     }
 
     private void assertReply(ReplyReqDTO expected, ReplyResDTO actual) {
         assertNotNull(actual.getId());
-        assertEquals(expected.getAuthor(), actual.getAuthor());
         assertEquals(expected.getContent(), actual.getContent());
     }
 }
