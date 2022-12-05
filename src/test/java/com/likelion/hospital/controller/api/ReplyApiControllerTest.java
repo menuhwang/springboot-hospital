@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.ReplyService;
 import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,6 @@ class ReplyApiControllerTest {
     void create() throws Exception {
         ReplyReqDTO replyReqDTO = ReplyReqDTO.builder()
                 .boardId(1L)
-                .author("author")
                 .content("content")
                 .build();
 
@@ -52,7 +52,7 @@ class ReplyApiControllerTest {
                 .content("content")
                 .build();
 
-        given(replyService.create(any(ReplyReqDTO.class))).willReturn(replyResDTO);
+        given(replyService.create(any(ReplyReqDTO.class), any(User.class))).willReturn(replyResDTO);
 
         mockMvc.perform(post("/api/v1/replies")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -46,9 +46,9 @@ public class BoardApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id, @AuthenticationPrincipal User me) {
         log.info("게시글 삭제 id:{}", id);
-        boardService.deleteById(id);
+        boardService.deleteById(id, me);
         return ResponseEntity.noContent().build();
     }
 }

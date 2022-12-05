@@ -5,6 +5,7 @@ import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
 import com.likelion.hospital.domain.entity.Board;
 import com.likelion.hospital.domain.entity.User;
+import com.likelion.hospital.exception.forbidden.PlainForbiddenException;
 import com.likelion.hospital.exception.notfound.BoardNotFoundException;
 import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.BoardRepository;
@@ -49,7 +50,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Long id, User me) {
+        Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        User user = userRepository.findById(me.getId()).orElseThrow(UserNotFoundException::new);
+        if (board.getAuthor().getId() != user.getId()) throw new PlainForbiddenException();
         boardRepository.deleteById(id);
     }
 }
