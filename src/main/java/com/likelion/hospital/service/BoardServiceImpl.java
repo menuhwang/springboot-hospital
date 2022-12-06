@@ -42,8 +42,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional // 더티 체킹
-    public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO) {
+    public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO, User me) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
+        if (board.getAuthor().getId() != me.getId()) throw new PlainForbiddenException();
         board.updateTitle(boardReqDTO.getTitle());
         board.updateContent(boardReqDTO.getContent());
         return BoardResDTO.of(board);

@@ -40,9 +40,9 @@ public class BoardApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BoardResDTO> editById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO) {
+    public ResponseEntity<BoardResDTO> editById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO, @AuthenticationPrincipal User me) {
         log.info("게시글 수정 id:{}, body:{}", id, boardReqDTO);
-        return ResponseEntity.ok(boardService.editById(id, boardReqDTO));
+        return ResponseEntity.ok(boardService.editById(id, boardReqDTO, me));
     }
 
     @DeleteMapping("/{id}")

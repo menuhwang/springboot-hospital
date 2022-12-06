@@ -88,7 +88,7 @@ class BoardServiceImplTest {
                                             .content("edit-content")
                                             .build();
 
-        BoardResDTO result = boardService.editById(1L, editDTO);
+        BoardResDTO result = boardService.editById(1L, editDTO, user);
 
         assertBoardDTO(editDTO, result);
     }

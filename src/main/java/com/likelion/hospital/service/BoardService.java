@@ -14,7 +14,7 @@ public interface BoardService {
 
     BoardResWithReplyDTO getById(Long id);
 
-    BoardResDTO editById(Long id, BoardReqDTO boardReqDTO);
+    BoardResDTO editById(Long id, BoardReqDTO boardReqDTO, User me);
 
     void deleteById(Long id, User me);
 }

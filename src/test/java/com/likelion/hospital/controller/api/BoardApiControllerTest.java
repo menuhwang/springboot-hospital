@@ -113,13 +113,13 @@ class BoardApiControllerTest {
                 .content("edit-content")
                 .build();
 
-        given(boardService.editById(eq(1L), any(BoardReqDTO.class))).willReturn(mockDTO);
+        given(boardService.editById(eq(1L), any(BoardReqDTO.class), any(User.class))).willReturn(mockDTO);
         // 인자에 any와 raw 값을 같이 넣을 수 없다.()
 
         mockMvc.perform(patch("/api/v1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(editDTO)));
-        verify(boardService).editById(eq(1L), any(BoardReqDTO.class));
+        verify(boardService).editById(eq(1L), any(BoardReqDTO.class), any(User.class));
     }
 }
