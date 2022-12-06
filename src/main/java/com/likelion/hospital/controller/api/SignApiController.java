@@ -4,12 +4,17 @@ import com.likelion.hospital.domain.dto.user.*;
 import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -23,6 +28,7 @@ public class SignApiController {
 
     @PostMapping("/signin")
     public ResponseEntity<SignInToken> login(@RequestBody SignInDTO dto) {
+        log.info("로그인 시도 ID:{}", dto.getUsername());
         SignInToken signInToken = userService.login(dto);
         ResponseCookie cookie = ResponseCookie.from("token", signInToken.getToken())
                 .httpOnly(false)
@@ -45,7 +51,7 @@ public class SignApiController {
                 .build();
     }
 
-    @GetMapping("/me")
+    @PostMapping("/me")
     public TokenVerifyResponse verify(@AuthenticationPrincipal User me) {
         return TokenVerifyResponse.of(me);
     }
