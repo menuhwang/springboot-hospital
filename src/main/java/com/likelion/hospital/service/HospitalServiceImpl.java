@@ -25,18 +25,18 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public Page<HospitalResDTO> findAll(Pageable pageable) {
         Page<Hospital> hospitals = hospitalRepository.findAll(pageable);
-        return hospitals.map(HospitalResDTO::new);
+        return hospitals.map(HospitalResDTO::of);
     }
 
     @Override
     public Page<HospitalResDTO> findByCity(String city, Pageable pageable) {
         Page<Hospital> hospitals = hospitalRepository.findByFullAddressContainsOrRoadNameAddressContains(city, city, pageable);
-        return hospitals.map(HospitalResDTO::new);
+        return hospitals.map(HospitalResDTO::of);
     }
 
     @Override
     public Page<HospitalResDTO> searchByName(String name, Pageable pageable) {
         Page<Hospital> hospitals = hospitalRepository.findByHospitalNameContains(name, pageable);
-        return hospitals.map(HospitalResDTO::new);
+        return hospitals.map(HospitalResDTO::of);
     }
 }

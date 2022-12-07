@@ -1,6 +1,7 @@
 package com.likelion.hospital.domain.dto.hospital;
 
 import com.likelion.hospital.domain.entity.Hospital;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -14,14 +15,31 @@ public class HospitalResDTO {
     private Float totalAreaSize;
     private Boolean shutDown;
 
-    public HospitalResDTO(Hospital hospital) {
-        this.id = hospital.getId();
-        this.hospitalName = hospital.getHospitalName();
-        this.fullAddress = hospital.getFullAddress();
-        this.roadNameAddress = hospital.getRoadNameAddress();
-        this.healthcareProviderCount = hospital.getHealthcareProviderCount();
-        this.patientRoomCount = hospital.getPatientRoomCount();
-        this.totalAreaSize = hospital.getTotalAreaSize();
-        this.shutDown = hospital.isShutDown();
+    private HospitalResDTO() {
+    }
+
+    @Builder
+    public HospitalResDTO(Integer id, String hospitalName, String fullAddress, String roadNameAddress, Integer healthcareProviderCount, Integer patientRoomCount, Float totalAreaSize, Boolean shutDown) {
+        this.id = id;
+        this.hospitalName = hospitalName;
+        this.fullAddress = fullAddress;
+        this.roadNameAddress = roadNameAddress;
+        this.healthcareProviderCount = healthcareProviderCount;
+        this.patientRoomCount = patientRoomCount;
+        this.totalAreaSize = totalAreaSize;
+        this.shutDown = shutDown;
+    }
+
+    public static HospitalResDTO of(Hospital hospital) {
+        return HospitalResDTO.builder()
+                .id(hospital.getId())
+                .hospitalName(hospital.getHospitalName())
+                .fullAddress(hospital.getFullAddress())
+                .roadNameAddress(hospital.getRoadNameAddress())
+                .healthcareProviderCount(hospital.getHealthcareProviderCount())
+                .patientRoomCount(hospital.getPatientRoomCount())
+                .totalAreaSize(hospital.getTotalAreaSize())
+                .shutDown(hospital.isShutDown())
+                .build();
     }
 }
