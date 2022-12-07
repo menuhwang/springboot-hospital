@@ -96,4 +96,19 @@ sudo sh release.sh {spring.datasource.url} {spring.datasource.username} {spring.
   }
   ```
 + 게시물 댓글 전체 조회 `GET /api/v1/replies?board={boardId}` **[Header] Authorization : token**
-    + `GET /api/v1/replies?board=1`
+  + `GET /api/v1/replies?board=1`
+
+#### Visit
+
++ 방문 기록 등록 `POST /api/v1/visits` **[Header] Authorization : token**
+  ```json
+  {
+    "hospitalId": Integer,
+    "disease": "String",
+    "expense": Integer
+  }
+  ```
+
++ 전체 조회 `GET /api/v1/visits` **[Header] Authorization : token**
++ 특정 User의 기록 조회 `GET /api/v1/visits/users/{id}` **[Header] Authorization : token**
++ 특정 병원의 기록 조회 `GET /api/v1/visits/hospitals/{id}` **[Header] Authorization : token**
