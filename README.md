@@ -10,6 +10,10 @@
 >
 > PW : qwerty123
 
+## ERD
+
+![ERD](/ERD.jpg)
+
 ## 배포
 
 ```bash
