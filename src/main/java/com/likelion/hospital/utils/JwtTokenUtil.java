@@ -17,6 +17,7 @@ public class JwtTokenUtil {
     private final String secret;
     private final long tokenExpiration;
     private final String USERNAME_KEY = "username";
+    private final String EMAIL_KEY = "email";
     private final String ID_KEY = "id";
 
     public JwtTokenUtil(@Value("${util.jwt.secret}") String secret, @Value("${util.jwt.tokenExpiration}") long tokenExpiration) {
@@ -28,6 +29,7 @@ public class JwtTokenUtil {
         Claims claims = Jwts.claims();
         claims.put(ID_KEY, user.getId());
         claims.put(USERNAME_KEY, user.getUsername());
+        claims.put(EMAIL_KEY, user.getEmail());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -60,10 +62,12 @@ public class JwtTokenUtil {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         Long id = Long.parseLong(claims.get(ID_KEY).toString());
         String username = claims.get(USERNAME_KEY).toString();
+        String email = claims.get(EMAIL_KEY).toString();
 
         User user = User.builder()
                 .id(id)
                 .username(username)
+                .email(email)
                 .password(token)
                 .build();
 
