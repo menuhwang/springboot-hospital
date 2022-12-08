@@ -31,6 +31,11 @@ public class VisitApiController {
         return visitService.findAllByUser(userId);
     }
 
+    @GetMapping("/me")
+    public List<VisitResponse> findMyVisit(@AuthenticationPrincipal User me) {
+        return visitService.findAllByUser(me.getId());
+    }
+
     @GetMapping("/hospitals/{hospitalId}")
     public List<VisitResponse> findByHospital(@PathVariable("hospitalId") Integer hospitalId) {
         return visitService.findAllByHospital(hospitalId);

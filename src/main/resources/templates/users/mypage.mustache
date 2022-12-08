@@ -1,0 +1,53 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5 px-5">
+    <h1 id="username"></h1>
+    <hr>
+    <h2>진료 기록</h2>
+    <div class="accordion" id="history">
+    </div>
+</div>
+<script>
+    const history = document.getElementById("history");
+
+    getHistory();
+
+    async function getHistory() {
+        const response = await fetch('/api/v1/visits/me', {
+            headers: {'Authorization': token || getCookie('token')}
+        });
+        if (response.ok) {
+            const body = await response.json();
+            for (let i = 0; i < body.length; i++) {
+                history.innerHTML = history.innerHTML + `
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="history-${i}-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#history-${i}-collapse" aria-expanded="false" aria-controls="history-${i}-collapse">
+                                <span>${body[i].hospital.hospitalName}</span>
+                            </button>
+                        </h2>
+                        <div id="history-${i}-collapse" class="accordion-collapse collapse" aria-labelledby="history-${i}-header" data-bs-parent="#history">
+                            <div class="accordion-body">
+                                <p>방문 사유 : ${body[i].disease}</p>
+                                <p>진료비 : ${body[i].expense}</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        } else {
+            history.innerHTML = "방문기록을 찾을 수 없습니다.";
+        }
+    }
+</script>
+{{>layouts/footer}}
+{{>bootstrap/script}}
+</body>
+</html>
