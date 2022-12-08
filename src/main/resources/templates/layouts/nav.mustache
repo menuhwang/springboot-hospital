@@ -24,7 +24,7 @@
                     </ul>
                 </li>
             </ul>
-            <div>
+            <div class="d-flex" id="sign">
                 <a type="button" class="btn btn-primary" id="signin-btn" href="/users/login">로그인</a>
                 <a hidden type="button" class="btn btn-primary" id="signout-btn" href="/users/logout">로그아웃</a>
             </div>
@@ -34,12 +34,6 @@
 <script>
     let token = getCookie('token');
     verifyToken(token);
-    const signinBtn = document.getElementById("signin-btn");
-    const signoutBtn = document.getElementById("signout-btn");
-    if (token !== "") {
-        signinBtn.hidden = true;
-        signoutBtn.hidden = false;
-    }
 
     function getCookie(key) {
         key = key + '=';
@@ -56,13 +50,23 @@
     }
 
     async function verifyToken(token) {
-        if (token === "") return;
+        const sign = document.getElementById("sign");
+        if (token === "") {
+            sign.innerHTML = `
+            <a type="button" class="btn btn-primary" id="signin-btn" href="/users/login">로그인</a>
+            `;
+            return;
+        }
         const response = await fetch('/api/v1/users/me', {
             method: 'POST',
             headers: {'Authorization': token || getCookie('token')}
         });
         if (response.ok) {
-            // username 표시.
+            const body = await response.json();
+            sign.innerHTML = `
+                    <a class="ms-2 me-2" href="/users/mypage">${body.username}</a>
+                    <a type="button" class="btn btn-outline-primary ms-2 me-2" id="signout-btn" href="/users/logout">로그아웃</a>
+                `;
         } else {
             location.href = "/users/logout";
         }
