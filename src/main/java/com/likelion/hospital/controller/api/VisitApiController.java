@@ -2,12 +2,11 @@ package com.likelion.hospital.controller.api;
 
 import com.likelion.hospital.domain.dto.visit.VisitRequest;
 import com.likelion.hospital.domain.dto.visit.VisitResponse;
-import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.VisitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -17,8 +16,8 @@ public class VisitApiController {
     private final VisitService visitService;
 
     @PostMapping("")
-    public VisitResponse create(@RequestBody VisitRequest visitRequest, @AuthenticationPrincipal User me) {
-        return visitService.create(visitRequest, me.getId());
+    public VisitResponse create(@RequestBody VisitRequest visitRequest, Principal me) {
+        return visitService.create(visitRequest, me.getName());
     }
 
     @GetMapping("")
@@ -32,8 +31,8 @@ public class VisitApiController {
     }
 
     @GetMapping("/me")
-    public List<VisitResponse> findMyVisit(@AuthenticationPrincipal User me) {
-        return visitService.findAllByUser(me.getId());
+    public List<VisitResponse> findMyVisit(Principal me) {
+        return visitService.findAllByUser(me.getName());
     }
 
     @GetMapping("/hospitals/{hospitalId}")

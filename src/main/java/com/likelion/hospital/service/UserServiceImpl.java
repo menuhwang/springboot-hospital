@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(dto.getUsername()).orElseThrow(UserNotFoundException::new);
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) throw new SignInForbiddenException();
         return new SignInToken(jwtTokenUtil.generateToken(user));
+    }
+
+    @Override
+    public UserResponse verify(Principal me) {
+        User user = userRepository.findByUsername(me.getName()).orElseThrow(UserNotFoundException::new);
+        return UserResponse.of(user);
     }
 
     @Override

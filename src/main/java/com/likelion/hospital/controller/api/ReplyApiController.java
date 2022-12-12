@@ -2,14 +2,13 @@ package com.likelion.hospital.controller.api;
 
 import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
-import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -25,8 +24,9 @@ public class ReplyApiController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ReplyResDTO> create(@RequestBody ReplyReqDTO replyReqDTO, @AuthenticationPrincipal User me) {
+    public ResponseEntity<ReplyResDTO> create(@RequestBody ReplyReqDTO replyReqDTO, Principal me) {
         log.info("댓글 작성 {}", replyReqDTO);
+        log.info("User {}", me.getName());
         return ResponseEntity.ok(replyService.create(replyReqDTO, me));
     }
 }

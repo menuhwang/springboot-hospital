@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,8 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     @Transactional
-    public ReplyResDTO create(ReplyReqDTO replyReqDTO, User me) throws RuntimeException {
-        User user = userRepository.findById(me.getId()).orElseThrow(UserNotFoundException::new);
+    public ReplyResDTO create(ReplyReqDTO replyReqDTO, Principal me) throws RuntimeException {
+        User user = userRepository.findByUsername(me.getName()).orElseThrow(UserNotFoundException::new);
         Board board = boardRepository.findById(replyReqDTO.getBoardId()).orElseThrow(BoardNotFoundException::new);
         Reply reply = replyReqDTO.toEntity(board, user);
         Reply saved = replyRepository.save(reply);

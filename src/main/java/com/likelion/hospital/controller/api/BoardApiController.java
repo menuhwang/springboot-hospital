@@ -3,7 +3,6 @@ package com.likelion.hospital.controller.api;
 import com.likelion.hospital.domain.dto.board.BoardReqDTO;
 import com.likelion.hospital.domain.dto.board.BoardResDTO;
 import com.likelion.hospital.domain.dto.board.BoardResWithReplyDTO;
-import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,8 +22,8 @@ public class BoardApiController {
     private final BoardService boardService;
 
     @PostMapping("")
-    public ResponseEntity<BoardResDTO> create(@RequestBody BoardReqDTO boardReqDTO, @AuthenticationPrincipal User me) {
-        log.info("author:{}, title:{}", me.getUsername(), boardReqDTO.getTitle());
+    public ResponseEntity<BoardResDTO> create(@RequestBody BoardReqDTO boardReqDTO, Principal me) {
+        log.info("author:{}, title:{}", me.getName(), boardReqDTO.getTitle());
         return ResponseEntity.ok(boardService.create(boardReqDTO, me));
     }
 
@@ -40,13 +40,13 @@ public class BoardApiController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BoardResDTO> editById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO, @AuthenticationPrincipal User me) {
+    public ResponseEntity<BoardResDTO> editById(@PathVariable("id") Long id, @RequestBody BoardReqDTO boardReqDTO, Principal me) {
         log.info("게시글 수정 id:{}, body:{}", id, boardReqDTO);
         return ResponseEntity.ok(boardService.editById(id, boardReqDTO, me));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id, @AuthenticationPrincipal User me) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id, Principal me) {
         log.info("게시글 삭제 id:{}", id);
         boardService.deleteById(id, me);
         return ResponseEntity.noContent().build();

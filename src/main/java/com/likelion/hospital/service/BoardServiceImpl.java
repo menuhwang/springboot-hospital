@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
+
 @RequiredArgsConstructor
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -23,8 +25,8 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
 
     @Override
-    public BoardResDTO create(BoardReqDTO boardDTO, User me) {
-        User user = userRepository.findById(me.getId()).orElseThrow(UserNotFoundException::new);
+    public BoardResDTO create(BoardReqDTO boardDTO, Principal me) {
+        User user = userRepository.findByUsername(me.getName()).orElseThrow(UserNotFoundException::new);
         return BoardResDTO.of(boardRepository.save(boardDTO.toEntity(user)));
     }
 
@@ -42,18 +44,18 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional // 더티 체킹
-    public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO, User me) {
+    public BoardResDTO editById(Long id, BoardReqDTO boardReqDTO, Principal me) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        if (board.getAuthor().getId() != me.getId()) throw new PlainForbiddenException();
+        if (board.getAuthor().getUsername() != me.getName()) throw new PlainForbiddenException();
         board.updateTitle(boardReqDTO.getTitle());
         board.updateContent(boardReqDTO.getContent());
         return BoardResDTO.of(board);
     }
 
     @Override
-    public void deleteById(Long id, User me) {
+    public void deleteById(Long id, Principal me) {
         Board board = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
-        User user = userRepository.findById(me.getId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByUsername(me.getName()).orElseThrow(UserNotFoundException::new);
         if (board.getAuthor().getId() != user.getId()) throw new PlainForbiddenException();
         boardRepository.deleteById(id);
     }
