@@ -81,7 +81,7 @@ class BoardServiceImplTest {
 
     @Test
     void editById() {
-        given(boardRepository.findById(1L)).willReturn(Optional.of(boardReqDTO.toEntity(new User())));
+        given(boardRepository.findById(1L)).willReturn(Optional.of(boardReqDTO.toEntity(user)));
 
         BoardReqDTO editDTO = BoardReqDTO.builder()
                                             .title("edit-title")
