@@ -4,18 +4,18 @@ import com.likelion.hospital.domain.dto.user.SignInDTO;
 import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
-import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @Slf4j
 @RestController
@@ -55,7 +55,7 @@ public class SignApiController {
     }
 
     @PostMapping("/me")
-    public UserResponse verify(@AuthenticationPrincipal User me) {
-        return UserResponse.of(me);
+    public UserResponse verify(Principal me) {
+        return userService.verify(me);
     }
 }

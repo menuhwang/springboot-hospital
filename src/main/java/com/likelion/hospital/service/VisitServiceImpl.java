@@ -24,8 +24,8 @@ public class VisitServiceImpl implements VisitService {
     private final HospitalRepository hospitalRepository;
 
     @Override
-    public VisitResponse create(VisitRequest visitRequest, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    public VisitResponse create(VisitRequest visitRequest, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         Hospital hospital = hospitalRepository.findById(visitRequest.getHospitalId()).orElseThrow(HospitalNotFoundException::new);
         Visit visit = visitRequest.toEntity(user, hospital);
         return VisitResponse.of(visitRepository.save(visit));
@@ -39,6 +39,12 @@ public class VisitServiceImpl implements VisitService {
     @Override
     public List<VisitResponse> findAllByUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return visitRepository.findByUser(user).stream().map(VisitResponse::of).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VisitResponse> findAllByUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return visitRepository.findByUser(user).stream().map(VisitResponse::of).collect(Collectors.toList());
     }
 
