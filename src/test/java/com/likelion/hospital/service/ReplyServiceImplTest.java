@@ -51,6 +51,7 @@ class ReplyServiceImplTest {
                 .content("content")
                 .build();
 
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
         given(boardRepository.findById(anyLong())).willReturn(Optional.ofNullable(board));
         given(replyRepository.save(any(Reply.class))).willReturn(saved);
 
