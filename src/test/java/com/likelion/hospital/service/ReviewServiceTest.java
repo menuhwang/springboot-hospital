@@ -4,11 +4,15 @@ import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
 import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.domain.entity.Review;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.repository.HospitalRepository;
 import com.likelion.hospital.repository.ReviewRepository;
+import com.likelion.hospital.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +24,20 @@ import static org.mockito.BDDMockito.given;
 
 class ReviewServiceTest {
     private final HospitalRepository hospitalRepository = Mockito.mock(HospitalRepository.class);
+    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private final ReviewRepository reviewRepository = Mockito.mock(ReviewRepository.class);
-    private final ReviewService reviewService = new ReviewServiceImpl(hospitalRepository, reviewRepository);
+    private final ReviewService reviewService = new ReviewServiceImpl(hospitalRepository, userRepository, reviewRepository);
+
+    private final User user = User.builder()
+            .username("testUser")
+            .build();
+
+    private final Principal principal = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
     @Test
     void create() {
         Integer boardId = 1;
         ReviewReqDTO reviewReqDTO = ReviewReqDTO.builder()
-                .author("author")
                 .content("content")
                 .build();
 
@@ -50,15 +60,16 @@ class ReviewServiceTest {
                 .totalAreaSize(52.29F)
                 .build();
 
-        Review review = reviewReqDTO.toEntity();
-        review.setHospital(hospital);
+        Review review = reviewReqDTO.toEntity(user);
+        hospital.addReview(review);
 
+        given(userRepository.findByUsername(principal.getName())).willReturn(Optional.of(user));
         given(hospitalRepository.findById(1)).willReturn(Optional.of(hospital));
         given(reviewRepository.save(any(Review.class))).willReturn(review);
 
-        ReviewResDTO result = reviewService.create(boardId, reviewReqDTO);
+        ReviewResDTO result = reviewService.create(boardId, reviewReqDTO, principal);
 
-        assertEquals(review.getAuthor(), result.getAuthor());
+        assertEquals(review.getAuthor().getUsername(), result.getAuthor());
         assertEquals(review.getContent(), result.getContent());
     }
 
@@ -66,13 +77,13 @@ class ReviewServiceTest {
     void findById() {
         ReviewResDTO expected = ReviewResDTO.builder()
                 .id(1L)
-                .author("author")
+                .author(user.getUsername())
                 .content("content")
                 .build();
 
         Review review = Review.builder()
                 .id(1L)
-                .author("author")
+                .author(user)
                 .content("content")
                 .build();
 
@@ -93,12 +104,12 @@ class ReviewServiceTest {
         for (int i = 0; i < 5; i++) {
             reviewList.add(Review.builder()
                     .id((long) i)
-                    .author("author" + i)
+                    .author(user)
                     .content("content" + i)
                     .build());
             reviewResDTOList.add(ReviewResDTO.builder()
                     .id((long) i)
-                    .author("author" + i)
+                    .author(user.getUsername())
                     .content("content" + i)
                     .build());
         }

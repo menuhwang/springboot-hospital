@@ -16,7 +16,7 @@ public class ReviewResDTO {
     public static ReviewResDTO of(Review review) {
         return ReviewResDTO.builder()
                 .id(review.getId())
-                .author(review.getAuthor())
+                .author(review.getAuthor().getUsername())
                 .content(review.getContent())
                 .build();
     }

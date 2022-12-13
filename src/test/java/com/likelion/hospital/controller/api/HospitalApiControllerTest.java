@@ -19,6 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +80,6 @@ class HospitalApiControllerTest {
     void createReview() throws Exception {
         Integer hospitalId = 1;
         ReviewReqDTO reviewReqDTO = ReviewReqDTO.builder()
-                .author("author")
                 .content("content")
                 .build();
 
@@ -89,7 +89,7 @@ class HospitalApiControllerTest {
                 .content("content")
                 .build();
 
-        given(reviewService.create(anyInt(), any(ReviewReqDTO.class))).willReturn(reviewResDTO);
+        given(reviewService.create(anyInt(), any(ReviewReqDTO.class), any(Principal.class))).willReturn(reviewResDTO);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/hospitals/" + hospitalId + "/reviews")
                         .contentType(MediaType.APPLICATION_JSON)

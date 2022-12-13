@@ -4,13 +4,17 @@ import com.likelion.hospital.domain.dto.review.ReviewReqDTO;
 import com.likelion.hospital.domain.dto.review.ReviewResDTO;
 import com.likelion.hospital.domain.entity.Hospital;
 import com.likelion.hospital.domain.entity.Review;
+import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.exception.notfound.HospitalNotFoundException;
+import com.likelion.hospital.exception.notfound.UserNotFoundException;
 import com.likelion.hospital.repository.HospitalRepository;
 import com.likelion.hospital.repository.ReviewRepository;
+import com.likelion.hospital.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,13 +22,15 @@ import java.util.stream.Collectors;
 @Service
 public class ReviewServiceImpl implements ReviewService {
     private final HospitalRepository hospitalRepository;
+    private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
     @Override
     @Transactional
-    public ReviewResDTO create(Integer boardId, ReviewReqDTO dto) {
+    public ReviewResDTO create(Integer boardId, ReviewReqDTO dto, Principal me) {
+        User user = userRepository.findByUsername(me.getName()).orElseThrow(UserNotFoundException::new);
         Hospital hospital = hospitalRepository.findById(boardId).orElseThrow(HospitalNotFoundException::new);
-        Review review = dto.toEntity();
+        Review review = dto.toEntity(user);
         hospital.addReview(review);
         Review saved = reviewRepository.save(review);
         return ReviewResDTO.of(saved);
