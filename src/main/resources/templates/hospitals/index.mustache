@@ -67,7 +67,7 @@
                 const address = (hospital.roadNameAddress !== "") ? hospital.roadNameAddress : hospital.fullAddress;
                 const tbody = document.getElementById("hospital-table-body");
                 tbody.innerHTML = tbody.innerHTML + `
-                    <tr id="hospital-table-row-${id}">
+                    <tr id="hospital-table-row-${id}" onclick="location.href='/hospitals/${id}'">
                         <td id="hospital-table-row-${id}-id">${id}</td>
                         <td id="hospital-table-row-${id}-name">${name}</td>
                         <td id="hospital-table-row-${id}-address">${address}</td>
