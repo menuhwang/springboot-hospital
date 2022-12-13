@@ -1,0 +1,52 @@
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>전국 병원 정보</title>
+    {{>bootstrap/head}}
+</head>
+<body>
+{{>layouts/nav}}
+<div class="container mt-5 mb-5">
+    <h1 id="hospital-detail-name"></h1>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h5 id="hospital-detail-info-header">정보</h5>
+        </div>
+        <div class="card-body" id="hospital-detail-info-body">
+        </div>
+    </div>
+    <div class="container ms-2" id="reviews-wrap">
+    </div>
+    <!--    {{>boards/reply/form}}-->
+</div>
+{{>layouts/footer}}
+<script>
+
+    getHospital({{id}});
+
+    async function getHospital(id) {
+        const name = document.getElementById("hospital-detail-name");
+        const infoBody = document.getElementById("hospital-detail-info-body");
+        const response = await fetch(`/api/v1/hospitals/${id}`, {
+            headers: {'Authorization': token || getCookie('token')}
+        });
+        let data;
+        if (response.ok) {
+            data = await response.json();
+        } else {
+            location.href = '/users/login';
+        }
+        console.log(data);
+        name.innerText = data.hospitalName;
+        infoBody.innerHTML = `
+            <p>도로명 주소 : ${data.roadNameAddress}</p>
+            <p>지번 주소 : ${data.fullAddress}</p>
+            <p>폐업 / 영업 : ${(data.shutDown) ? "폐업" : "영업"}</p>
+        `;
+    }
+</script>
+{{>bootstrap/script}}
+</body>
+</html>

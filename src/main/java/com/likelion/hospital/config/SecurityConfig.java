@@ -25,7 +25,7 @@ public class SecurityConfig {
         http.cors();
 
         http.authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET, "/", "/hospitals*", "/boards*", "/boards/*", "/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/hospitals/**", "/boards*", "/boards/**", "/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/hospitals", "/api/v1/boards").permitAll()
                 .antMatchers("/api/v1/users/signup", "/api/v1/users/signin", "/api/v1/users/signout").permitAll()
                 .antMatchers("/boards/new", "/boards/edit/*").authenticated()
