@@ -6,7 +6,6 @@ import com.likelion.hospital.domain.dto.user.SignInDTO;
 import com.likelion.hospital.domain.dto.user.SignInToken;
 import com.likelion.hospital.domain.dto.user.SignUpDTO;
 import com.likelion.hospital.domain.dto.user.UserResponse;
-import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.exception.conflict.DuplicateUsernameException;
 import com.likelion.hospital.exception.forbidden.SignInForbiddenException;
 import com.likelion.hospital.service.UserService;
@@ -17,10 +16,11 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.security.Principal;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -61,8 +61,8 @@ class SignApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signUpDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userName").value(USERNAME))
-                .andExpect(jsonPath("$.emailAddress").value(EMAIL))
+                .andExpect(jsonPath("$.username").value(USERNAME))
+                .andExpect(jsonPath("$.email").value(EMAIL))
                 .andDo(print());
 
         verify(userService).join(any(SignUpDTO.class));
@@ -144,19 +144,18 @@ class SignApiControllerTest {
     @Test
     @WithMockUser
     void 로그인_상태_확인() throws Exception {
-        String testToken = "testMockToken";
-        User user = new User(1L, "testUser", "password", "testUser@email.com");
-        given(jwtTokenUtil.validateToken(testToken)).willReturn(true);
-        given(jwtTokenUtil.getAuthentication(testToken)).willReturn(new UsernamePasswordAuthenticationToken(user, testToken, user.getAuthorities()));
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
-                        .header("Authorization", testToken))
+        UserResponse userResponse = UserResponse.builder()
+                .id(1L)
+                .username("testUser")
+                .email("testUser@test.com")
+                .build();
+        given(userService.verify(any(Principal.class))).willReturn(userResponse);
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/me"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.username").exists())
                 .andDo(print());
 
-        verify(jwtTokenUtil).validateToken(testToken);
-        verify(jwtTokenUtil).getAuthentication(testToken);
+        verify(userService).verify(any(Principal.class));
     }
 }
