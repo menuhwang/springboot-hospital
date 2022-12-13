@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likelion.hospital.config.SecurityConfig;
 import com.likelion.hospital.domain.dto.reply.ReplyReqDTO;
 import com.likelion.hospital.domain.dto.reply.ReplyResDTO;
-import com.likelion.hospital.domain.entity.User;
 import com.likelion.hospital.service.ReplyService;
 import com.likelion.hospital.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,18 +52,14 @@ class ReplyApiControllerTest {
                 .content("content")
                 .build();
 
-        given(replyService.create(any(ReplyReqDTO.class), any(User.class))).willReturn(replyResDTO);
+        given(replyService.create(any(ReplyReqDTO.class), any(Principal.class))).willReturn(replyResDTO);
 
         mockMvc.perform(post("/api/v1/replies")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8")
                         .content(objectMapper.writeValueAsString(replyReqDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.author").exists())
                 .andExpect(jsonPath("$.author").value("author"))
-                .andExpect(jsonPath("$.content").exists())
                 .andExpect(jsonPath("$.content").value("content"))
                 .andDo(print());
     }
@@ -83,6 +79,7 @@ class ReplyApiControllerTest {
         given(replyService.findByBoardId(any(Long.class))).willReturn(replyResDTOList);
 
         mockMvc.perform(get("/api/v1/replies").param("board", "1"))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*].id").exists())
                 .andExpect(jsonPath("$[*].author").exists())
                 .andExpect(jsonPath("$[*].content").exists())

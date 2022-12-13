@@ -13,14 +13,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 class BoardServiceImplTest {
@@ -34,6 +36,8 @@ class BoardServiceImplTest {
             .email("tester@test.com")
             .build();
 
+    Principal principal = new UsernamePasswordAuthenticationToken(user, null, null);
+
     BoardReqDTO boardReqDTO = BoardReqDTO.builder()
             .title("title")
             .content("content")
@@ -44,9 +48,9 @@ class BoardServiceImplTest {
         Board board = boardReqDTO.toEntity(user);
 
         given(boardRepository.save(any(Board.class))).willReturn(board);
-        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.of(user));
 
-        BoardResDTO result = boardService.create(boardReqDTO, user);
+        BoardResDTO result = boardService.create(boardReqDTO, principal);
 
         assertBoardDTO(boardReqDTO, result);
     }
@@ -88,7 +92,7 @@ class BoardServiceImplTest {
                                             .content("edit-content")
                                             .build();
 
-        BoardResDTO result = boardService.editById(1L, editDTO, user);
+        BoardResDTO result = boardService.editById(1L, editDTO, principal);
 
         assertBoardDTO(editDTO, result);
     }
