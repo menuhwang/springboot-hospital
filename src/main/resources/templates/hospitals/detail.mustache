@@ -19,7 +19,6 @@
     </div>
     <div class="container ms-2" id="reviews-wrap">
     </div>
-    <!--    {{>boards/reply/form}}-->
 </div>
 {{>layouts/footer}}
 <script>
@@ -29,6 +28,7 @@
     async function getHospital(id) {
         const name = document.getElementById("hospital-detail-name");
         const infoBody = document.getElementById("hospital-detail-info-body");
+        const reviewsWrap = document.getElementById("reviews-wrap");
         const response = await fetch(`/api/v1/hospitals/${id}`, {
             headers: {'Authorization': token || getCookie('token')}
         });
@@ -45,6 +45,19 @@
             <p>지번 주소 : ${data.fullAddress}</p>
             <p>폐업 / 영업 : ${(data.shutDown) ? "폐업" : "영업"}</p>
         `;
+        const reviews = data.reviews;
+        for (let i = 0; i < reviews.length; i++) {
+            reviewsWrap.innerHTML = reviewsWrap.innerHTML + `<div class="card mt-3 ms-3" id="review-${reviews[i].id}">
+                <div class="card-header">
+                    <h5>${reviews[i].author}</h5>
+                </div>
+                <div class="card-body">
+                    ${reviews[i].content}
+                    <button class="btn btn-primary float-end ms-2">삭제</button>
+                    <button class="btn btn-primary float-end ms-2">수정</button>
+                </div>
+            </div>`
+        }
     }
 </script>
 {{>bootstrap/script}}
