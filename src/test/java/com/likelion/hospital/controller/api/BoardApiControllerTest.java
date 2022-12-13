@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.Principal;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -57,7 +59,7 @@ class BoardApiControllerTest {
                 .content("content")
                 .build();
 
-        given(boardService.create(any(BoardReqDTO.class), any(User.class))).willReturn(boardResDTO);
+        given(boardService.create(any(BoardReqDTO.class), any(Principal.class))).willReturn(boardResDTO);
 
         mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +71,7 @@ class BoardApiControllerTest {
                 .andExpect(jsonPath("$.content").value("content"))
                 .andDo(print());
 
-        verify(boardService).create(any(BoardReqDTO.class), any(User.class));
+        verify(boardService).create(any(BoardReqDTO.class), any(Principal.class));
     }
 
     @Test
@@ -79,7 +81,7 @@ class BoardApiControllerTest {
                 .content("content")
                 .build();
 
-        given(boardService.create(any(BoardReqDTO.class), any(User.class))).willReturn(boardResDTO);
+        given(boardService.create(any(BoardReqDTO.class), any(Principal.class))).willReturn(boardResDTO);
 
         mockMvc.perform(post("/api/v1/boards")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,6 +92,7 @@ class BoardApiControllerTest {
     }
 
     @Test
+    @WithMockUser
     void getOneById() throws Exception {
         given(boardService.getById(1L)).willReturn(boardResWithReplyDTO);
         mockMvc.perform(get("/api/v1/boards/1"))
@@ -101,6 +104,7 @@ class BoardApiControllerTest {
     }
 
     @Test
+    @WithMockUser
     void editOneById() throws Exception {
         BoardReqDTO editDTO = BoardReqDTO.builder()
                 .title("edit-title")
@@ -113,13 +117,13 @@ class BoardApiControllerTest {
                 .content("edit-content")
                 .build();
 
-        given(boardService.editById(eq(1L), any(BoardReqDTO.class), any(User.class))).willReturn(mockDTO);
+        given(boardService.editById(eq(1L), any(BoardReqDTO.class), any(Principal.class))).willReturn(mockDTO);
         // 인자에 any와 raw 값을 같이 넣을 수 없다.()
 
         mockMvc.perform(patch("/api/v1/boards/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("utf-8")
                 .content(objectMapper.writeValueAsString(editDTO)));
-        verify(boardService).editById(eq(1L), any(BoardReqDTO.class), any(User.class));
+        verify(boardService).editById(eq(1L), any(BoardReqDTO.class), any(Principal.class));
     }
 }
