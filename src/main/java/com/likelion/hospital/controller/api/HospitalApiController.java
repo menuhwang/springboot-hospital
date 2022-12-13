@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -45,9 +46,9 @@ public class HospitalApiController {
     }
 
     @PostMapping("/{id}/reviews")
-    public ResponseEntity<ReviewResDTO> createReview(@PathVariable("id") Integer id, @RequestBody ReviewReqDTO reviewReqDTO) {
+    public ResponseEntity<ReviewResDTO> createReview(@PathVariable("id") Integer id, @RequestBody ReviewReqDTO reviewReqDTO, Principal me) {
         log.info("리뷰 등록 dto:{}", reviewReqDTO);
-        return ResponseEntity.ok(reviewService.create(id, reviewReqDTO));
+        return ResponseEntity.ok(reviewService.create(id, reviewReqDTO, me));
     }
 
 //    @GetMapping("/{name}")
