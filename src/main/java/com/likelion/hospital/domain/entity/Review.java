@@ -16,7 +16,8 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String author;
+    @ManyToOne
+    private User author;
     private String content;
     @ManyToOne
     @JoinColumn(name = "hospital_id")
